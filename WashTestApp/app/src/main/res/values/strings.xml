@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">WashTestApp</string>
+
+    <string name="full_wash">Полная мойка</string>
+    <string name="vacuum_cleaner">Пылесос</string>
+    <string name="address">Адрес</string>
+
+    <string name="suvs">Внедорожники</string>
+    <string name="sedans">Седаны</string>
+    <string name="buses">Автобусы</string>
+
+    <string name="suvs_description">Мы предоставляем услугии по мойке внедорожников. Полный комплекс - от экспресс мойки до трехвазной комплексной мойки</string>
+    <string name="sedans_description">Описаение о мойке сдеанов</string>
+    <string name="buses_description">Описаниие о мойке автобусов</string>
+</resources>

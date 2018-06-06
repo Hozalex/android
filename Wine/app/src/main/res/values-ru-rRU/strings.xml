@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ВинишкоБухлишко</string>
+    <string name="choice">Выбери желаемую степень</string>
+    <string name="button_sloshed">Пьяненькая</string>
+    <string name="button_legless">Буханькая</string>
+    <string name="button_mySelf">Я независимая женщина \nи определю сама!!</string>
+    <string name="choice_sl">Твой выбор...</string>
+    <string name="order_legless">Оформить заказ</string>
+    <string name="order_sloshed">Оформить заказ</string>
+    <string name="sloshed_choice_wine">Винишко - 1 бутылка \nЗакусочки - немного сыра, \nфруктов, орехи..</string>
+    <string name="sloshed_choice_beer">Пиво - 6 бутылок \nЗакусочки - немного сыра, \nчипсов, орехи..</string>
+    <string name="legless_choice_wine">Винишко - 2 бутылки \nЗакуска - много сыра, \nкреветки/мидии, чиабатта...</string>
+    <string name="legless_choice_beer">Пиво - 8 бутылок \nЗакуска много сыра, чипсы, \nрыбка вяленая...</string>
+    <string name="attention">Внимание! Алкоголь вредит вашему здоровью!</string>
+    <string name="wine">Вино:</string>
+    <string name="beer">Пиво:</string>
+    <string name="hint_toppings">Закуска</string>
+</resources>

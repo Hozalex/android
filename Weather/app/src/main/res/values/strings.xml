@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Sunny Weather</string>
+    <string name="weather_button">Check the weather</string>
+    <string name="share_button">Share the Weather</string>
+    <string name="last_share_weather">You shared the weather: </string>
+    <string name="pressure">Pressure</string>
+    <string name="tomorrow_forecast">Tomorrow Forecast</string>
+    <string name="week_forecast">Week Forecast</string>
+    <string name="pressure_value">760 mm</string>
+    <string name="tomorrow_weather">+30 IT IS GOING TO SUNNY</string>
+    <string name="week_weather">THERE WILL BE GOOD WEATHER</string>
+    <string-array name="weather">
+        <item>+10 IT IS RAINY TODAY</item>
+        <item>+20 IT IS SUNNY TODAY</item>
+    </string-array>
+    <string-array name="cities">
+        <item>Moscow</item>
+        <item>Saint-Petersburg</item>
+        <item>Paris</item>
+        <item>Madrid</item>
+    </string-array>
+</resources>

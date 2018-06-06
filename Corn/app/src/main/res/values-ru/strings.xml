@@ -1,0 +1,18 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">КУКУРУЗА</string>
+    <string name="consumer_name">Имя</string>
+    <string name="order_name">Имя: <xliff:g example="Иван" id="name">%s</xliff:g></string>
+    <string name="order_quantity">Количество: <xliff:g example="3" id="order_quantity">%d</xliff:g></string>
+    <string name="order_sugar">Добаваить сахар: <xliff:g example="true" id="order_sugar">%b</xliff:g></string>
+    <string name="order_salt">Добаваить соль: <xliff:g example="true" id="order_salt">%b</xliff:g></string>
+    <string name="order_price">Итого: <xliff:g example="30" id="order_price">%s</xliff:g></string>
+    <string name="toppings">ДОБАВКИ</string>
+    <string name="salt">Добавить Соль</string>
+    <string name="sugar">Добавить Сахар</string>
+    <string name="quantity">Количество</string>
+    <string name="order_summary">Заказ</string>
+    <string name="order_button">ЗАКАЗ</string>
+
+    <string name="thanks">Спасибо!!</string>
+
+</resources>

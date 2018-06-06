@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Alarm</string>
+    <string name="alarm_activity_name">Wake UP</string>
+    <string name="clock_text">Time: </string>
+    <string name="day_text">Day: </string>
+    <string name="alarm_text">Alarm text:</string>
+    <string name="alarm_hint_text">text for alarm</string>
+    <string name="day_hint_text">w-weekdays h-holiday d/mon,tue,wd,th,fr,sat,sun</string>
+    <string name="clock_hint_text">24 format 00:00-23:59</string>
+    <string name="cancel_hint_text">Type cancel</string>
+</resources>

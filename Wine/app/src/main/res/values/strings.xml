@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Wine&amp;...</string>
+    <string name="choice">Choose the degree of intoxication \n as you wish</string>
+    <string name="button_sloshed">Sloshed</string>
+    <string name="button_legless">Legless</string>
+    <string name="button_mySelf">I am choosing</string>
+
+    <string name="choice_sl">Your Choice</string>
+    <string name="wine">Wine : </string>
+    <string name="beer">Beer : </string>
+    <string name="attention">Attention: alcohol harms your health!!</string>
+    <string name="hint_toppings">Toppings</string>
+
+    <string name="sloshed_choice_wine">Wine: 1 bottle \nSnacks: some cheese, fruits,\nnuts..</string>
+    <string name="sloshed_choice_beer">Beer: 6 bottles \nSnacks: some cheese, chips,\nnuts..</string>
+    <string name="legless_choice_wine">Wine: 2 bottles \nSnacks: a lot of cheese, shrimp, \nciabatta..</string>
+    <string name="legless_choice_beer">Beer: 8 bottles \nSnacks: a lot of cheese, chips,\nfish..</string>
+</resources>

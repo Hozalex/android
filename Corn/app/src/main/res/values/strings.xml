@@ -1,0 +1,16 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">CORN</string>
+    <string name="consumer_name">Name</string>
+    <string name="order_name">Name: <xliff:g example="Mark" id="name">%s</xliff:g></string>
+    <string name="order_quantity">Quantity: <xliff:g example="3" id="order_quantity">%d</xliff:g></string>
+    <string name="order_sugar">Add sugar: <xliff:g example="true" id="order_sugar">%b</xliff:g></string>
+    <string name="order_salt">Add salt: <xliff:g example="true" id="order_salt">%b</xliff:g></string>
+    <string name="order_price">Price: <xliff:g example="30" id="order_price">%s</xliff:g></string>
+    <string name="toppings">TOPPINGS</string>
+    <string name="salt">With Salt</string>
+    <string name="sugar">With Sugar</string>
+    <string name="quantity">QUANTITY</string>
+    <string name="order_summary">Order</string>
+    <string name="order_button">ORDER</string>
+    <string name="thanks">Thank you!!</string>
+</resources>

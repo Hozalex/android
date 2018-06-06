@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/startClockText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:text="@string/clock_text"
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="@id/clockText"
+        app:layout_constraintTop_toTopOf="@id/clockText" />
+
+    <TextView
+        android:id="@+id/startDayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:text="@string/day_text"
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="@id/dayText"
+        app:layout_constraintTop_toTopOf="@id/dayText" />
+
+    <TextView
+        android:id="@+id/startAlarmText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:text="@string/alarm_text"
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="@id/alarmText"
+        app:layout_constraintTop_toTopOf="@id/alarmText" />
+
+    <EditText
+        android:id="@+id/clockText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cursorVisible="true"
+        android:hint="@string/clock_hint_text"
+        android:inputType="time"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorHintText"
+        android:textCursorDrawable="@null"
+        app:layout_constraintStart_toEndOf="@id/startClockText" />
+
+    <EditText
+        android:id="@+id/dayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cursorVisible="true"
+        android:hint="@string/day_hint_text"
+        android:inputType="text"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorHintText"
+        android:textCursorDrawable="@null"
+        app:layout_constraintStart_toEndOf="@id/startDayText"
+        app:layout_constraintTop_toBottomOf="@id/clockText" />
+
+    <EditText
+        android:id="@+id/alarmText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:cursorVisible="true"
+        android:hint="@string/alarm_hint_text"
+        android:inputType="text"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorHintText"
+        android:textCursorDrawable="@null"
+        app:layout_constraintStart_toEndOf="@id/startAlarmText"
+        app:layout_constraintTop_toBottomOf="@id/dayText" />
+
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="16dp"
+        android:clickable="false"
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toTopOf="@id/button" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:onClick="press"
+        android:text="write"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/alarm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:onClick="recallAlarm"
+        android:text="alarm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button" />
+
+</android.support.constraint.ConstraintLayout>
