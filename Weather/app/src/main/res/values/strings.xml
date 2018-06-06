@@ -9,14 +9,12 @@
     <string name="pressure_value">760 mm</string>
     <string name="tomorrow_weather">+30 IT IS GOING TO SUNNY</string>
     <string name="week_weather">THERE WILL BE GOOD WEATHER</string>
-    <string-array name="weather">
-        <item>+10 IT IS RAINY TODAY</item>
-        <item>+20 IT IS SUNNY TODAY</item>
-    </string-array>
-    <string-array name="cities">
-        <item>Moscow</item>
-        <item>Saint-Petersburg</item>
-        <item>Paris</item>
-        <item>Madrid</item>
-    </string-array>
+
+    <string name="rainy">+10 IT IS RAINY TODAY</string>
+    <string name="sunny">+20 IT IS SUNNY TODAY</string>
+    <string name="moscow_city">Moscow</string>
+    <string name="spb_city">Saint-Petersburg</string>
+    <string name="paris_city">Paris</string>
+    <string name="madrid_city">Madrid</string>
+
 </resources>

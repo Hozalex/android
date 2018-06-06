@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Солнечная погодка</string>
-    <string name="weather_button">Проверить погоду</string>
     <string name="share_button">Поделись погодой</string>
     <string name="last_share_weather">Вы поделились погодой в: </string>
-    <string-array name="weather">
-        <item>+10 Сегодня Дождь</item>
-        <item>+20 Сегодня Солнечно</item>
-    </string-array>
-    <string-array name="cities">
-        <item>Москва</item>
-        <item>Санкт-Петербург</item>
-        <item>Париж</item>
-        <item>Мадрид</item>
-    </string-array>
+
+    <string name="rainy">+10 Сегодня Дождь</string>
+    <string name="sunny">+20 Сегодня Солнечно</string>
+    <string name="moscow_city">Москва</string>
+    <string name="spb_city">Санкт-Петербург</string>
+    <string name="paris_city">Париж</string>
+    <string name="madrid_city">Мадрид</string>
+
     <string name="pressure">Давление</string>
     <string name="tomorrow_forecast">Прогноз на завтра</string>
     <string name="week_forecast">Прогноз на неделю</string>
