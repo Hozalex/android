@@ -6,62 +6,72 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.*
+import com.example.ahozyainov.activities.adapters.CityAdapter
+import com.example.ahozyainov.activities.common.IntentHelper
+import com.example.ahozyainov.activities.models.Cities
 
 class MainActivity : AppCompatActivity() {
 
     private val sharedTextKey = "sharedText"
     private var sharedText = ""
-    private val MYSETTINGS = "mySettings"
-    private var city: String = ""
-    private val cityKey = "city"
-    private val isChecked = 1
-    private val unChecked = 0
+    private val mySettings = "mySettings"
     private val sendRequestCode = 1
     private lateinit var settings: SharedPreferences
     private lateinit var textView: TextView
-    private lateinit var checkPressure: CheckBox
-    private lateinit var checkTomorrowForecast: CheckBox
-    private lateinit var checkWeekForecast: CheckBox
-    private lateinit var adapter: ArrayAdapter<CharSequence>
+    private lateinit var checkBoxPressure: CheckBox
+    private lateinit var checkBoxTomorrowForecast: CheckBox
+    private lateinit var checkBoxWeekForecast: CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var rvCities: RecyclerView = findViewById(R.id.rvCities)
-        rvCities.setHasFixedSize(true)
-        rvCities.layoutManager = object : LinearLayoutManager(this)
-
-
-        settings = getSharedPreferences(MYSETTINGS, Context.MODE_PRIVATE)
+        settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         textView = findViewById(R.id.text_view_main)
-        checkPressure = findViewById(R.id.checkbox_pressure)
-        checkTomorrowForecast = findViewById(R.id.checkbox_tomorrow)
-        checkWeekForecast = findViewById(R.id.checkbox_week)
+        checkBoxPressure = findViewById(R.id.checkbox_pressure)
+        checkBoxTomorrowForecast = findViewById(R.id.checkbox_tomorrow)
+        checkBoxWeekForecast = findViewById(R.id.checkbox_week)
         intent = Intent(this, WeatherActivity::class.java)
 
+        var rvCities: RecyclerView = findViewById(R.id.rvCities)
+        rvCities.setHasFixedSize(true)
+        rvCities.layoutManager = LinearLayoutManager(this)
+        rvCities.adapter = CityAdapter(Cities.getAllCities(this), CityAdapter.OnCityClickListener { cityPosition ->
+            run {
+                intent.putExtra(IntentHelper.EXTRA_CITY_POSITION, cityPosition)
+                startActivityForResult(intent, sendRequestCode)
+            }
+        })
+        rvCities.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
 
         if (savedInstanceState != null) {
             sharedText = savedInstanceState.getString(sharedTextKey)
             textView.text = sharedText
         }
 
+        checkBoxPressure.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, b)
+        }
+        checkBoxTomorrowForecast.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_TOMORROW, b)
+        }
+        checkBoxWeekForecast.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_WEEK, b)
+        }
 
-//        checkSettings()
+        checkSettings()
 
     }
 
     override fun onStop() {
         super.onStop()
-
-//        settings.edit().putString(checkPressure.text.toString(), checkPressure.isChecked.toString())
-//        settings.edit().putString(checkTomorrowForecast.text.toString(), checkTomorrowForecast.isChecked.toString())
-//        settings.edit().putString(checkWeekForecast.text.toString(), checkWeekForecast.isChecked.toString())
-
-
+        settings.edit().putBoolean(checkBoxPressure.text.toString(), checkBoxPressure.isChecked).apply()
+        settings.edit().putBoolean(checkBoxTomorrowForecast.text.toString(), checkBoxTomorrowForecast.isChecked).apply()
+        settings.edit().putBoolean(checkBoxWeekForecast.text.toString(), checkBoxWeekForecast.isChecked).apply()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -78,40 +88,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkWeather() {
+    private fun checkSettings() {
+        if (settings.getBoolean(checkBoxPressure.text.toString(), checkBoxPressure.isChecked)) {
+            checkBoxPressure.isChecked = true
+        }
+        if (settings.getBoolean(checkBoxTomorrowForecast.text.toString(), checkBoxTomorrowForecast.isChecked)) {
+            checkBoxTomorrowForecast.isChecked = true
+        }
+        if (settings.getBoolean(checkBoxWeekForecast.text.toString(), checkBoxWeekForecast.isChecked)) {
+            checkBoxWeekForecast.isChecked = true
+        }
 
-        if (checkPressure.isChecked) {
-            println("checkPressure - checked main")
-            intent.putExtra(checkPressure.text.toString(), isChecked)
-        } else intent.putExtra(checkPressure.text.toString(), unChecked)
-
-        if (checkTomorrowForecast.isChecked) {
-            println("checkTomorrow - checked main")
-            intent.putExtra(checkTomorrowForecast.text.toString(), isChecked)
-        } else intent.putExtra(checkTomorrowForecast.text.toString(), unChecked)
-
-        if (checkWeekForecast.isChecked) {
-            println("checkWeek - checked main")
-            intent.putExtra(checkPressure.text.toString(), isChecked)
-        } else intent.putExtra(checkPressure.text.toString(), unChecked)
-
-        intent.putExtra(cityKey, city)
-        startActivityForResult(intent, sendRequestCode)
     }
-
-//    private fun checkSettings() {
-//        var checkedBox: String
-//        if (settings.contains(cityKey)) {
-//            var checkCity: String = settings.getString(cityKey, "")
-//            var cityArray: Array<String> = resources.getStringArray(R.array.cities)
-//            var index = 0
-//            for (item in cityArray) {
-//                if (checkCity.equals(item)) {
-//                    index = cityArray.indexOf(item)
-//                }
-//            }
-//
-//        }
 
 
 }

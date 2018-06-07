@@ -18,7 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.ahozyainov.activities.WeatherActivity"></activity>
+        <activity
+            android:name="com.example.ahozyainov.activities.WeatherActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

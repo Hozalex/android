@@ -28,7 +28,6 @@ public class Cities {
                 new Cities(context.getString(R.string.paris_city), R.string.rainy, R.drawable.rainy),
                 new Cities(context.getString(R.string.madrid_city), R.string.sunny, R.drawable.sunny),
         };
-
-
     }
+
 }

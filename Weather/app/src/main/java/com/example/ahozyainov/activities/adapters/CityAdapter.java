@@ -15,6 +15,11 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
     private Cities citiesData[];
     private OnCityClickListener onCityClickListener;
 
+    public CityAdapter(Cities[] citiesData, OnCityClickListener onCityClickListener) {
+        this.citiesData = citiesData;
+        this.onCityClickListener = onCityClickListener;
+    }
+
     @NonNull
     @Override
     public CityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
