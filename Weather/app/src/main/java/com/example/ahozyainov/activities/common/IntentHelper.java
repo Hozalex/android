@@ -6,5 +6,6 @@ public class IntentHelper {
     public static final String EXTRA_CHECKBOX_PRESSURE = "checkBoxPresure";
     public static final String EXTRA_CHECKBOX_TOMORROW = "checkBoxTomorrow";
     public static final String EXTRA_CHECKBOX_WEEK = "checkBoxWeek";
+    public static final String EXTRA_CITY_ID = "cityId";
 
 }
