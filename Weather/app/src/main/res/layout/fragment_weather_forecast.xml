@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WeatherActivity">
+    tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/image_weather_activity"
@@ -20,33 +20,31 @@
         android:id="@+id/text_view_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:padding="8dp"
+        android:layout_margin="16dp"
         android:textColor="@color/colorText"
         android:textSize="38sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/text_view_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@color/colorBackground"
+        android:gravity="center"
+        android:textColor="@color/colorText"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintTop_toBottomOf="@id/text_view_city" />
+
     <LinearLayout
+        android:id="@+id/vertical_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@id/image_weather_activity"
-        app:layout_constraintEnd_toEndOf="@id/image_weather_activity"
-        app:layout_constraintStart_toStartOf="@id/image_weather_activity"
-        app:layout_constraintTop_toTopOf="@id/image_weather_activity">
-
-        <TextView
-            android:id="@+id/text_view_weather"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@color/colorBackground"
-            android:gravity="center"
-            android:textColor="@color/colorText"
-            android:textSize="32sp"
-            android:textStyle="bold|italic" />
+        app:layout_constraintBottom_toTopOf="@id/share_button">
 
         <TextView
             android:id="@+id/text_view_pressure"
@@ -71,6 +69,33 @@
             android:layout_margin="8dp"
             android:textColor="@color/colorText"
             android:textSize="24sp" />
+
+        <CheckBox
+            android:id="@+id/checkbox_pressure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground"
+            android:text="@string/pressure" />
+
+        <CheckBox
+            android:id="@+id/checkbox_tomorrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground"
+            android:text="@string/tomorrow_forecast" />
+
+        <CheckBox
+            android:id="@+id/checkbox_week"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground"
+            android:text="@string/week_forecast" />
+
+        <TextView
+            android:id="@+id/text_view_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp" />
 
     </LinearLayout>
 

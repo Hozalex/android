@@ -14,7 +14,6 @@ import com.example.ahozyainov.activities.models.Cities
 
 class WeatherActivity : AppCompatActivity() {
 
-    private val sharedTextKey = "sharedText"
     private lateinit var lastShare: String
     private lateinit var textViewWeather: TextView
     private lateinit var textViewCity: TextView
@@ -59,7 +58,7 @@ class WeatherActivity : AppCompatActivity() {
         }
 
         var sendIntent: Intent = intent
-        sendIntent.putExtra(sharedTextKey, lastShare + " " + textViewCity.text.toString())
+        sendIntent.putExtra(IntentHelper.EXTRA_SHARED_WEATHER, lastShare + " " + textViewCity.text.toString())
         setResult(Activity.RESULT_OK, intent)
     }
 
