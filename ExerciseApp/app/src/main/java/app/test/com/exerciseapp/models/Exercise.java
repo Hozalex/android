@@ -7,12 +7,9 @@ import app.test.com.exerciseapp.R;
 
 public class Exercise {
 
-    public @StringRes
-    int name;
-    public @StringRes
-    int description;
-    public @DrawableRes
-    int image;
+    public @StringRes int name;
+    public @StringRes int description;
+    public @DrawableRes int image;
 
     private Exercise(int name, int description, int image) {
         this.name = name;
