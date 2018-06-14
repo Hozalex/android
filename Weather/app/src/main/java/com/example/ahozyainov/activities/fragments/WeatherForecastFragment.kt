@@ -13,8 +13,13 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.ahozyainov.activities.R
+<<<<<<< HEAD
 import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.Cities
+=======
+import com.example.ahozyainov.activities.common.IntentHelper
+import com.example.ahozyainov.activities.models.Cities
+>>>>>>> d1ec112e0b99d060155f01972686e9bc379f61b2
 
 class WeatherForecastFragment : Fragment() {
 

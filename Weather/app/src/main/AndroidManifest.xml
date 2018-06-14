@@ -20,12 +20,15 @@
         </activity>
         <activity
             android:name=".WeatherActivity"
+<<<<<<< HEAD
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".InfoActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AddCityActivity"
+=======
+>>>>>>> d1ec112e0b99d060155f01972686e9bc379f61b2
             android:parentActivityName=".MainActivity" />
     </application>
 
