@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.example.ahozyainov.activities.adapters.CityAdapter
@@ -45,6 +47,33 @@ class MainActivity : AppCompatActivity() {
         rvCities = findViewById(R.id.rvCities)
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
+
+        addAdapter(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            sharedText = savedInstanceState.getString(IntentHelper.EXTRA_SHARED_WEATHER)
+            textView.text = sharedText
+        }
+
+        checkBoxChecked()
+
+        checkSettings()
+
+    }
+
+    private fun checkBoxChecked() {
+        checkBoxPressure.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, b)
+        }
+        checkBoxTomorrowForecast.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_TOMORROW, b)
+        }
+        checkBoxWeekForecast.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_WEEK, b)
+        }
+    }
+
+    private fun addAdapter(savedInstanceState: Bundle?) {
         rvCities.adapter = CityAdapter(Cities.getAllCities(this), CityAdapter.OnCityClickListener { cityPosition ->
             run {
                 if (!twoPane) {
@@ -57,24 +86,41 @@ class MainActivity : AppCompatActivity() {
         if (twoPane && savedInstanceState == null)
             showWeatherForecastFragment(0)
         rvCities.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+    }
 
-        if (savedInstanceState != null) {
-            sharedText = savedInstanceState.getString(IntentHelper.EXTRA_SHARED_WEATHER)
-            textView.text = sharedText
-        }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
-        checkBoxPressure.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, b)
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.menu_add -> {
+                addCity()
+                return true
+            }
+            R.id.menu_clear -> {
+                clearCities()
+                return true
+            }
+            R.id.menu_delete -> {
+                deleteCity()
+                return true
+            }
         }
-        checkBoxTomorrowForecast.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_TOMORROW, b)
-        }
-        checkBoxWeekForecast.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_WEEK, b)
-        }
+        return super.onOptionsItemSelected(item)
+    }
 
-        checkSettings()
+    private fun deleteCity() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
+    private fun clearCities() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun addCity() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun showWeatherForecastFragment(cityPosition: Int) {
