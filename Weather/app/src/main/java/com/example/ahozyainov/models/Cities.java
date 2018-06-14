@@ -1,4 +1,4 @@
-package com.example.ahozyainov.activities.models;
+package com.example.ahozyainov.models;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;

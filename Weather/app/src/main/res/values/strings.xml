@@ -19,6 +19,12 @@
     <string name="add">Add</string>
     <string name="delete">Delete</string>
     <string name="clear">Clear</string>
+    <string name="change">Change</string>
+    <string name="info">Info</string>
+    <string name="attention_info">Attention: The Forecast in the app is not true!!!</string>
+    <string name="about">About</string>
+    <string name="add_city_button">Add</string>
+    <string name="input_city">Input City</string>
 
 
 </resources>

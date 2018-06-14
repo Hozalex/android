@@ -1,4 +1,4 @@
-package com.example.ahozyainov.activities.adapters;
+package com.example.ahozyainov.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.ahozyainov.activities.R;
-import com.example.ahozyainov.activities.models.Cities;
+import com.example.ahozyainov.models.Cities;
 
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder> {
 
@@ -18,6 +18,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
     public CityAdapter(Cities[] citiesData, OnCityClickListener onCityClickListener) {
         this.citiesData = citiesData;
         this.onCityClickListener = onCityClickListener;
+
     }
 
     @NonNull
@@ -51,7 +52,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
         public CityViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
+
         }
+
     }
 
     public interface OnCityClickListener {

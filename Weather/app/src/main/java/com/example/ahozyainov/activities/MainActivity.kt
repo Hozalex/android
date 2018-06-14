@@ -6,17 +6,23 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
+import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import com.example.ahozyainov.activities.adapters.CityAdapter
-import com.example.ahozyainov.activities.common.IntentHelper
+import com.example.ahozyainov.activities.R.id.rvCities
+import com.example.ahozyainov.adapters.CityAdapter
+import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
-import com.example.ahozyainov.activities.models.Cities
+import com.example.ahozyainov.models.Cities
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var checkBoxWeekForecast: CheckBox
     private lateinit var rvCities: RecyclerView
     private var twoPane: Boolean = false
+    private lateinit var imageMain: ImageView
+    private lateinit var floatingActionButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,26 +50,22 @@ class MainActivity : AppCompatActivity() {
         checkBoxPressure = findViewById(R.id.checkbox_pressure)
         checkBoxTomorrowForecast = findViewById(R.id.checkbox_tomorrow)
         checkBoxWeekForecast = findViewById(R.id.checkbox_week)
-        intent = Intent(this, WeatherActivity::class.java)
 
+        imageMain = findViewById(com.example.ahozyainov.activities.R.id.image_Main)
         rvCities = findViewById(R.id.rvCities)
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
-
-        addAdapter(savedInstanceState)
-
         if (savedInstanceState != null) {
             sharedText = savedInstanceState.getString(IntentHelper.EXTRA_SHARED_WEATHER)
             textView.text = sharedText
         }
 
-        checkBoxChecked()
+        registerForContextMenu(imageMain)
 
-        checkSettings()
+        addAdapter(savedInstanceState)
 
-    }
+        initPopUpMenu()
 
-    private fun checkBoxChecked() {
         checkBoxPressure.setOnCheckedChangeListener { compoundButton, b ->
             intent.putExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, b)
         }
@@ -71,12 +75,47 @@ class MainActivity : AppCompatActivity() {
         checkBoxWeekForecast.setOnCheckedChangeListener { compoundButton, b ->
             intent.putExtra(IntentHelper.EXTRA_CHECKBOX_WEEK, b)
         }
+
+        checkSettings()
+
+    }
+
+    private fun initPopUpMenu() {
+        floatingActionButton = findViewById(R.id.popButton)
+        floatingActionButton.setOnClickListener {
+            val popupMenu = PopupMenu(this, it)
+            menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.info_menu -> {
+                        intent = Intent(this, InfoActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    R.id.about_menu -> {
+                        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
+                        toast.show()
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+
+            }
+            popupMenu.show()
+        }
+    }
+
+    private fun checkBoxChecked() {
+
     }
 
     private fun addAdapter(savedInstanceState: Bundle?) {
         rvCities.adapter = CityAdapter(Cities.getAllCities(this), CityAdapter.OnCityClickListener { cityPosition ->
             run {
                 if (!twoPane) {
+                    intent = Intent(this, WeatherActivity::class.java)
                     intent.putExtra(IntentHelper.EXTRA_CITY_POSITION, cityPosition)
                     startActivityForResult(intent, sendRequestCode)
                 } else showWeatherForecastFragment(cityPosition)
@@ -87,6 +126,7 @@ class MainActivity : AppCompatActivity() {
             showWeatherForecastFragment(0)
         rvCities.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -111,16 +151,30 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        menuInflater.inflate(R.menu.context_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
+        toast.show()
+        return super.onContextItemSelected(item)
+    }
+
+
     private fun deleteCity() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
+        toast.show()
     }
 
     private fun clearCities() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
+        toast.show()
     }
 
     private fun addCity() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        intent = Intent(this, AddCityActivity::class.java)
+        startActivity(intent)
     }
 
     private fun showWeatherForecastFragment(cityPosition: Int) {

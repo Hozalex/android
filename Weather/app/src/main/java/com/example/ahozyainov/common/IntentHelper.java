@@ -1,4 +1,4 @@
-package com.example.ahozyainov.activities.common;
+package com.example.ahozyainov.common;
 
 public class IntentHelper {
 

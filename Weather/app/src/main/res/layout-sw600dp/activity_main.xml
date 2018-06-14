@@ -19,12 +19,6 @@
             android:padding="16dp"
             tools:listitem="@layout/item_city" />
 
-        <!--<fragment-->
-        <!--android:id="@+id/flRightContainer"-->
-        <!--android:name="com.example.ahozyainov.activities.fragments.WeatherForecastFragment"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="3" />-->
 
         <FrameLayout
             android:id="@+id/flRightContainer"
@@ -34,6 +28,11 @@
             tools:context=".WeatherActivity" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_Main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <CheckBox
         android:id="@+id/checkbox_pressure"

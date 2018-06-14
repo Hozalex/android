@@ -2,15 +2,13 @@ package com.example.ahozyainov.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.ahozyainov.activities.R.color.colorBackground
-import com.example.ahozyainov.activities.common.IntentHelper
-import com.example.ahozyainov.activities.models.Cities
+import com.example.ahozyainov.common.IntentHelper
+import com.example.ahozyainov.models.Cities
 
 class WeatherActivity : AppCompatActivity() {
 
@@ -41,10 +39,10 @@ class WeatherActivity : AppCompatActivity() {
         showWeather(getIntent.getIntExtra(IntentHelper.EXTRA_CITY_POSITION, 0))
         showForecast()
 
-        button.setOnClickListener({
+        button.setOnClickListener {
             shareWeather()
 
-        })
+        }
     }
 
     private fun shareWeather() {
