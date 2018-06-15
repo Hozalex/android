@@ -4,25 +4,20 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.ActivityCompat.startActivityForResult
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
-import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import com.example.ahozyainov.activities.R.id.rvCities
+import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
-import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.models.Cities
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,9 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         textView = findViewById(R.id.text_view_main)
-        checkBoxPressure = findViewById(R.id.checkbox_pressure)
-        checkBoxTomorrowForecast = findViewById(R.id.checkbox_tomorrow)
-        checkBoxWeekForecast = findViewById(R.id.checkbox_week)
+
 
         imageMain = findViewById(com.example.ahozyainov.activities.R.id.image_Main)
         rvCities = findViewById(R.id.rvCities)
@@ -60,23 +53,12 @@ class MainActivity : AppCompatActivity() {
             textView.text = sharedText
         }
 
-        registerForContextMenu(imageMain)
 
         addAdapter(savedInstanceState)
-
+//        checkBoxChecked()
         initPopUpMenu()
 
-        checkBoxPressure.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, b)
-        }
-        checkBoxTomorrowForecast.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_TOMORROW, b)
-        }
-        checkBoxWeekForecast.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_WEEK, b)
-        }
-
-        checkSettings()
+//        checkSettings()
 
     }
 
@@ -87,14 +69,16 @@ class MainActivity : AppCompatActivity() {
             menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.info_menu -> {
-                        intent = Intent(this, InfoActivity::class.java)
-                        startActivity(intent)
+                    R.id.pressure_menu_checkbox -> {
+
                         true
                     }
-                    R.id.about_menu -> {
-                        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
-                        toast.show()
+                    R.id.tomorrow_menu_checkbox -> {
+
+                        true
+                    }
+                    R.id.week_menu_checkbox -> {
+
                         true
                     }
                     else -> {
@@ -108,7 +92,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkBoxChecked() {
-
+        checkBoxPressure.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, b)
+        }
+        checkBoxTomorrowForecast.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_TOMORROW, b)
+        }
+        checkBoxWeekForecast.setOnCheckedChangeListener { compoundButton, b ->
+            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_WEEK, b)
+        }
     }
 
     private fun addAdapter(savedInstanceState: Bundle?) {
@@ -144,16 +136,26 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.menu_delete -> {
-                deleteCity()
+                settings.edit().clear()
+                this.onResume()
+                return true
+            }
+            R.id.menu_info -> {
+                val toast = Toast.makeText(applicationContext, R.string.attention_info, Toast.LENGTH_LONG)
+                toast.duration = Toast.LENGTH_LONG
+                toast.show()
+                return true
+            }
+            R.id.menu_about -> {
+                val toast = Toast.makeText(applicationContext, R.string.about_text, Toast.LENGTH_LONG)
+                toast.duration = Toast.LENGTH_LONG
+                toast.show()
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        menuInflater.inflate(R.menu.context_menu, menu)
-    }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
@@ -183,11 +185,12 @@ class MainActivity : AppCompatActivity() {
                 .commit()
     }
 
+
     override fun onStop() {
         super.onStop()
-        settings.edit().putBoolean(checkBoxPressure.text.toString(), checkBoxPressure.isChecked).apply()
-        settings.edit().putBoolean(checkBoxTomorrowForecast.text.toString(), checkBoxTomorrowForecast.isChecked).apply()
-        settings.edit().putBoolean(checkBoxWeekForecast.text.toString(), checkBoxWeekForecast.isChecked).apply()
+//        settings.edit().putBoolean(checkBoxPressure.text.toString(), checkBoxPressure.isChecked).apply()
+//        settings.edit().putBoolean(checkBoxTomorrowForecast.text.toString(), checkBoxTomorrowForecast.isChecked).apply()
+//        settings.edit().putBoolean(checkBoxWeekForecast.text.toString(), checkBoxWeekForecast.isChecked).apply()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

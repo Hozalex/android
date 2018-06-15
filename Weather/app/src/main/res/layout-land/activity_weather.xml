@@ -23,7 +23,7 @@
         android:layout_margin="8dp"
         android:padding="8dp"
         android:textColor="@color/colorText"
-        android:textSize="38sp"
+        android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,36 +41,36 @@
             android:id="@+id/text_view_weather"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:background="@color/colorBackground"
             android:gravity="center"
             android:textColor="@color/colorText"
-            android:textSize="32sp"
+            android:textSize="24sp"
             android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/text_view_pressure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:textColor="@color/colorText"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_view_tomorrow_forecast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:textColor="@color/colorText"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_view_week_forecast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:textColor="@color/colorText"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
 
 
     </LinearLayout>

@@ -11,13 +11,30 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvCities"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="16dp"
-            tools:listitem="@layout/item_city" />
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvCities"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="10"
+                android:padding="16dp"
+                tools:listitem="@layout/item_city" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/popButton"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_menu_info_details" />
+
+
+        </LinearLayout>
 
 
         <FrameLayout
