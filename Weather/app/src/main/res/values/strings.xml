@@ -26,6 +26,8 @@
     <string name="add_city_button">Add</string>
     <string name="input_city">Input City</string>
     <string name="about_text">Developed by Aleksandr Khozyainov. version 0.0.0.1 Beta</string>
+    <string name="feedback">Feedback</string>
+    <string name="user">User:</string>
 
 
 </resources>
