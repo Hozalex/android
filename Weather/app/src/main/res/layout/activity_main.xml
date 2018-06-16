@@ -19,42 +19,18 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvCities"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_city" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/text_view_main">
-
-        <CheckBox
-            android:id="@+id/checkbox_pressure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pressure" />
-
-        <CheckBox
-            android:id="@+id/checkbox_tomorrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tomorrow_forecast" />
-
-        <CheckBox
-            android:id="@+id/checkbox_week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/week_forecast" />
-    </LinearLayout>
 
     <TextView
         android:id="@+id/text_view_main"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
@@ -62,16 +38,16 @@
         android:textSize="24sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/image_Main"
-        app:layout_constraintStart_toStartOf="@id/image_Main" />
+        app:layout_constraintEnd_toStartOf="@id/popButton"
+        app:layout_constraintStart_toStartOf="@id/rvCities" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/popButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_dialog_info" />
 

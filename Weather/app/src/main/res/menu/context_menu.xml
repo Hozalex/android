@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_change_theme"
-        android:title="@string/change" />
+        android:id="@+id/menu_context_delete"
+        android:title="@string/delete_city" />
 
 </menu>

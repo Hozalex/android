@@ -17,14 +17,15 @@
     <string name="paris_city">Paris</string>
     <string name="madrid_city">Madrid</string>
     <string name="add">Add</string>
-    <string name="delete">Delete</string>
-    <string name="clear">Clear</string>
-    <string name="change">Change</string>
+    <string name="delete">Delete save data</string>
+    <string name="clear">Clear all Cities</string>
+    <string name="delete_city">Delete City</string>
     <string name="info">Info</string>
     <string name="attention_info">Attention: The Forecast in the app is not true!!!</string>
     <string name="about">About</string>
     <string name="add_city_button">Add</string>
     <string name="input_city">Input City</string>
+    <string name="about_text">Developed by Aleksandr Khozyainov. version 0.0.0.1 Beta</string>
 
 
 </resources>
