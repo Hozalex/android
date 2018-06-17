@@ -15,6 +15,7 @@
         app:headerLayout="@layout/nav_layout"
         app:menu="@menu/drawer_menu" />
 
+<<<<<<< HEAD
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -68,6 +69,41 @@
 
 
     </android.support.constraint.ConstraintLayout>
+=======
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvCities"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_city" />
+
+
+    <TextView
+        android:id="@+id/text_view_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:textColor="@color/colorText"
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/popButton"
+        app:layout_constraintStart_toStartOf="@id/rvCities" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/popButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_dialog_info" />
+>>>>>>> 732d9a0afad6ebdd03891611a978b7208ffa8798
 
 
 </android.support.v4.widget.DrawerLayout>
