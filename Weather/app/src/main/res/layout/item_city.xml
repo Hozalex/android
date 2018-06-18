@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:padding="16dp"
+    android:textColor="@color/colorSecondaryText"
     tools:text="CITY">
 
 </TextView>
