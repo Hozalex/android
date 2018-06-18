@@ -21,6 +21,7 @@ import com.example.ahozyainov.models.Cities
 
 class MainActivity : AppCompatActivity() {
 
+
     private var sharedText = ""
     private val mySettings = "mySettings"
     private val sendRequestCode = 1
@@ -39,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         twoPane = findViewById<View>(R.id.flRightContainer) != null
-
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         textView = findViewById(R.id.text_view_main)
 
@@ -62,6 +62,28 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.menu_info -> {
+//                val toast = Toast.makeText(applicationContext, R.string.attention_info, Toast.LENGTH_LONG)
+//                toast.duration = Toast.LENGTH_LONG
+//                toast.show()
+//                return true
+//            }
+//            R.id.menu_about -> {
+//                val toast = Toast.makeText(applicationContext, R.string.about_text, Toast.LENGTH_LONG)
+//                toast.duration = Toast.LENGTH_LONG
+//                toast.show()
+//                return true
+//            }
+//
+//        }
+//        dlMainLayout.closeDrawer(GravityCompat.START)
+//        return true
+//
+//    }
+
+
     private fun initPopUpMenu() {
         floatingActionButton = findViewById(R.id.popButton)
         floatingActionButton.setOnClickListener {
@@ -70,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.pressure_menu_checkbox -> {
-
+                        it.isChecked = !it.isChecked
                         true
                     }
                     R.id.tomorrow_menu_checkbox -> {
@@ -85,9 +107,9 @@ class MainActivity : AppCompatActivity() {
                         false
                     }
                 }
-
             }
             popupMenu.show()
+
         }
     }
 
@@ -120,41 +142,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.menu_add -> {
-                addCity()
-                return true
-            }
-            R.id.menu_clear -> {
-                clearCities()
-                return true
-            }
-            R.id.menu_delete -> {
-                settings.edit().clear()
-                this.onResume()
-                return true
-            }
-            R.id.menu_info -> {
-                val toast = Toast.makeText(applicationContext, R.string.attention_info, Toast.LENGTH_LONG)
-                toast.duration = Toast.LENGTH_LONG
-                toast.show()
-                return true
-            }
-            R.id.menu_about -> {
-                val toast = Toast.makeText(applicationContext, R.string.about_text, Toast.LENGTH_LONG)
-                toast.duration = Toast.LENGTH_LONG
-                toast.show()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.main_menu, menu)
+//        return super.onCreateOptionsMenu(menu)
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+//        when (item!!.itemId) {
+//            R.id.menu_add -> {
+//                addCity()
+//                return true
+//            }
+//            R.id.menu_clear -> {
+//                clearCities()
+//                return true
+//            }
+//            R.id.menu_delete -> {
+//                settings.edit().clear()
+//                this.onResume()
+//                return true
+//            }
+//
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {

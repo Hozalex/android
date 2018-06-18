@@ -27,6 +27,7 @@
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/popButton"
+                android:backgroundTint="@color/colorAccent"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
@@ -48,21 +49,6 @@
 
     <ImageView
         android:id="@+id/image_Main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <CheckBox
-        android:id="@+id/checkbox_pressure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <CheckBox
-        android:id="@+id/checkbox_tomorrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <CheckBox
-        android:id="@+id/checkbox_week"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

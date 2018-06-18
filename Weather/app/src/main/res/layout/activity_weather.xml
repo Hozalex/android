@@ -18,12 +18,11 @@
 
     <TextView
         android:id="@+id/text_view_city"
+        style="@style/TextViewHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:padding="8dp"
-        android:textColor="@color/colorText"
-        android:textSize="38sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,38 +38,33 @@
 
         <TextView
             android:id="@+id/text_view_weather"
+            style="@style/TextViewHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@color/colorBackground"
-            android:gravity="center"
-            android:textColor="@color/colorText"
-            android:textSize="32sp"
-            android:textStyle="bold|italic" />
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/text_view_pressure"
+            style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:textColor="@color/colorText"
-            android:textSize="24sp" />
+            android:layout_margin="8dp" />
 
         <TextView
             android:id="@+id/text_view_tomorrow_forecast"
+            style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:textColor="@color/colorText"
-            android:textSize="24sp" />
+            android:layout_margin="8dp" />
 
         <TextView
             android:id="@+id/text_view_week_forecast"
+            style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:textColor="@color/colorText"
-            android:textSize="24sp" />
+            android:layout_margin="8dp" />
 
 
     </LinearLayout>
@@ -78,6 +72,7 @@
 
     <Button
         android:id="@+id/share_button"
+        style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
