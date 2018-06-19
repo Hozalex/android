@@ -6,23 +6,26 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import com.example.ahozyainov.activities.R.id.drawer_layout
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.Cities
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var sharedText = ""
     private val mySettings = "mySettings"
@@ -36,6 +39,9 @@ class MainActivity : AppCompatActivity() {
     private var twoPane: Boolean = false
     private lateinit var imageMain: ImageView
     private lateinit var floatingActionButton: FloatingActionButton
+    private lateinit var toolbar: Toolbar
+    private lateinit var navView: NavigationView
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +51,10 @@ class MainActivity : AppCompatActivity() {
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         textView = findViewById(R.id.text_view_main)
         floatingActionButton = findViewById(R.id.popButton)
-
+        drawerLayout = findViewById(R.id.drawer_layout)
+        toolbar = findViewById(R.id.toolbar)
         imageMain = findViewById(com.example.ahozyainov.activities.R.id.image_Main)
+        navView = findViewById(R.id.nav_view)
         rvCities = findViewById(R.id.rvCities)
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
@@ -54,11 +62,10 @@ class MainActivity : AppCompatActivity() {
             sharedText = savedInstanceState.getString(IntentHelper.EXTRA_SHARED_WEATHER)
             textView.text = sharedText
         }
+
         setSupportActionBar(toolbar)
-        val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.open, R.string.close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
+        initActionBar()
+        navView.setNavigationItemSelectedListener(this)
 
         addAdapter(savedInstanceState)
 //        checkBoxChecked()
@@ -68,26 +75,44 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.menu_info -> {
-//                val toast = Toast.makeText(applicationContext, R.string.attention_info, Toast.LENGTH_LONG)
-//                toast.duration = Toast.LENGTH_LONG
-//                toast.show()
-//                return true
-//            }
-//            R.id.menu_about -> {
-//                val toast = Toast.makeText(applicationContext, R.string.about_text, Toast.LENGTH_LONG)
-//                toast.duration = Toast.LENGTH_LONG
-//                toast.show()
-//                return true
-//            }
-//
-//        }
-//        dlMainLayout.closeDrawer(GravityCompat.START)
-//        return true
-//
-//    }
+    private fun initActionBar() {
+        val toggle = ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_info -> {
+                val toast = Toast.makeText(applicationContext, R.string.attention_info, Toast.LENGTH_LONG)
+                toast.duration = Toast.LENGTH_LONG
+                toast.show()
+                return true
+            }
+            R.id.menu_about -> {
+                val toast = Toast.makeText(applicationContext, R.string.about_text, Toast.LENGTH_LONG)
+                toast.duration = Toast.LENGTH_LONG
+                toast.show()
+                return true
+            }
+            R.id.menu_feedback -> {
+                intent = Intent(Intent.ACTION_SEND)
+                intent.type = "message/email"
+                intent.putExtra(Intent.EXTRA_EMAIL, getText(R.string.feedback_mail_to))
+                intent.putExtra(Intent.EXTRA_SUBJECT, getText(R.string.feedback_mail_subject))
+
+                if (intent.resolveActivity(packageManager) != null) {
+                    startActivity(intent)
+                }
+
+            }
+
+        }
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+
+    }
 
 
     private fun initPopUpMenu() {
@@ -153,30 +178,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.main_menu, menu)
-//        return super.onCreateOptionsMenu(menu)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-//        when (item!!.itemId) {
-//            R.id.menu_add -> {
-//                addCity()
-//                return true
-//            }
-//            R.id.menu_clear -> {
-//                clearCities()
-//                return true
-//            }
-//            R.id.menu_delete -> {
-//                settings.edit().clear()
-//                this.onResume()
-//                return true
-//            }
-//
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.menu_add -> {
+                addCity()
+                return true
+            }
+            R.id.menu_clear -> {
+                clearCities()
+                return true
+            }
+            R.id.menu_delete -> {
+                settings.edit().clear()
+                this.onResume()
+                return true
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
