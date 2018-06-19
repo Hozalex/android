@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 
 class MainActivity : AppCompatActivity() {
 
-
     private var sharedText = ""
     private val mySettings = "mySettings"
     private val sendRequestCode = 1
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         twoPane = findViewById<View>(R.id.flRightContainer) != null
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         textView = findViewById(R.id.text_view_main)
-
+        floatingActionButton = findViewById(R.id.popButton)
 
         imageMain = findViewById(com.example.ahozyainov.activities.R.id.image_Main)
         rvCities = findViewById(R.id.rvCities)
@@ -92,7 +91,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initPopUpMenu() {
-        floatingActionButton = findViewById(R.id.popButton)
         floatingActionButton.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
             menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
@@ -139,12 +137,18 @@ class MainActivity : AppCompatActivity() {
                     intent = Intent(this, WeatherActivity::class.java)
                     intent.putExtra(IntentHelper.EXTRA_CITY_POSITION, cityPosition)
                     startActivityForResult(intent, sendRequestCode)
-                } else showWeatherForecastFragment(cityPosition)
+                } else {
+                    showWeatherForecastFragment(cityPosition)
+                    floatingActionButton.hide()
+                }
             }
         })
 
-        if (twoPane && savedInstanceState == null)
+        if (twoPane && savedInstanceState == null) {
             showWeatherForecastFragment(0)
+            floatingActionButton.hide()
+        }
+
         rvCities.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
     }
 

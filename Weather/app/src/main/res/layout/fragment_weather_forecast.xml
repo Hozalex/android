@@ -43,8 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/share_button"
-        app:layout_constraintTop_toBottomOf="@id/text_view_weather">
+        app:layout_constraintBottom_toTopOf="@id/share_button">
 
 
     </FrameLayout>
@@ -54,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@color/colorBackground"
         android:text="@string/share_button"
         app:layout_constraintBottom_toBottomOf="parent"

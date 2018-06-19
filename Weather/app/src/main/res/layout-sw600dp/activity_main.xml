@@ -1,62 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <LinearLayout
-        android:id="@+id/horizontal_layout"
+    <include
+        layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="match_parent" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvCities"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="10"
-                android:padding="16dp"
-                tools:listitem="@layout/item_city" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/popButton"
-                android:backgroundTint="@color/colorAccent"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:src="@android:drawable/ic_menu_info_details" />
-
-
-        </LinearLayout>
-
-
-        <FrameLayout
-            android:id="@+id/flRightContainer"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            tools:context=".WeatherActivity" />
-
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/image_Main"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_layout"
+        app:menu="@menu/drawer_menu" />
 
-    <TextView
-        android:id="@+id/text_view_main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+</android.support.v4.widget.DrawerLayout>
 
 
-</LinearLayout>
 

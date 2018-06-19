@@ -63,24 +63,41 @@ open class ForecastDetailFragment : android.support.v4.app.Fragment(), View.OnCl
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            checkBoxPressure.id -> onClickPressureCheckBox(v)
-            checkBoxTomorrowForecast.id -> onClickTomorrowForecastCheckBox(v)
-            checkBoxWeekForecast.id -> onClickWeekForecastCheckBox(v)
+            checkBoxPressure.id -> onClickPressureCheckBox()
+            checkBoxTomorrowForecast.id -> onClickTomorrowForecastCheckBox()
+            checkBoxWeekForecast.id -> onClickWeekForecastCheckBox()
 
         }
     }
 
-    private fun onClickPressureCheckBox(view: View) {
-//        tvPressure.text = view.findViewById<View>(R.id.text_view_week_forecast)
-        tvPressure.text = resources.getString(R.string.pressure_value)
+    private fun onClickPressureCheckBox() {
+        if (checkBoxPressure.isChecked) {
+            tvPressure.text = resources.getString(R.string.pressure_value)
+            tvPressure.setBackgroundResource(R.color.colorBackground)
+        } else {
+            tvPressure.text = ""
+            tvPressure.setBackgroundColor(0)
+        }
     }
 
-    private fun onClickTomorrowForecastCheckBox(view: View) {
-        tvTomorrowForecast.text = resources.getString(R.string.tomorrow_weather)
+    private fun onClickTomorrowForecastCheckBox() {
+        if (checkBoxTomorrowForecast.isChecked) {
+            tvTomorrowForecast.text = resources.getString(R.string.tomorrow_weather)
+            tvTomorrowForecast.setBackgroundResource(R.color.colorBackground)
+        } else {
+            tvTomorrowForecast.text = ""
+            tvTomorrowForecast.setBackgroundColor(0)
+        }
     }
 
-    private fun onClickWeekForecastCheckBox(view: View) {
-        tvWeekForecast.text = resources.getString(R.string.week_weather)
+    private fun onClickWeekForecastCheckBox() {
+        if (checkBoxWeekForecast.isChecked) {
+            tvWeekForecast.text = resources.getString(R.string.week_weather)
+            tvWeekForecast.setBackgroundResource(R.color.colorBackground)
+        } else {
+            tvWeekForecast.text = ""
+            tvWeekForecast.setBackgroundColor(0)
+        }
     }
 
 }

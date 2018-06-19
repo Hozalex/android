@@ -29,6 +29,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         app:backgroundTint="@color/colorAccent"
-        app:srcCompat="@android:drawable/ic_dialog_info" />
+        app:srcCompat="@android:drawable/ic_menu_agenda" />
 
 </android.support.design.widget.CoordinatorLayout>
