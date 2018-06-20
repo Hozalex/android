@@ -6,6 +6,9 @@ import android.support.annotation.StringRes;
 
 import com.example.ahozyainov.activities.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 public class Cities {
 
@@ -15,11 +18,13 @@ public class Cities {
     public @DrawableRes
     int imageId;
 
+
     private Cities(String name, int descriptionId, int imageId) {
         this.name = name;
         this.descriptionId = descriptionId;
         this.imageId = imageId;
     }
+
 
     public static Cities[] getAllCities(Context context) {
         return new Cities[]{
@@ -29,6 +34,7 @@ public class Cities {
                 new Cities(context.getString(R.string.madrid_city), R.string.sunny, R.drawable.sunny),
         };
     }
+
 
 }
 

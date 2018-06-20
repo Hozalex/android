@@ -9,12 +9,10 @@ import android.support.v4.app.FragmentTransaction
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import com.example.ahozyainov.activities.R
 import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.Cities
+import kotlinx.android.synthetic.main.activity_weather.*
 
 
 class WeatherForecastFragment : Fragment() {
@@ -36,23 +34,19 @@ class WeatherForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var tvCityName: TextView = view.findViewById(R.id.text_view_city)
-        var tvWeather: TextView = view.findViewById(R.id.text_view_weather)
-        var imWeather: ImageView = view.findViewById(R.id.image_weather_activity)
-        var btShareWeather: Button = view.findViewById(R.id.share_button)
 
 
         if (arguments == null) return
         var cities = Cities.getAllCities(context)
         var city: Cities = cities[arguments!!.getInt(IntentHelper.EXTRA_CITY_ID)]
-        tvCityName.text = city.name
-        tvWeather.setText(city.descriptionId)
-        imWeather.setImageResource(city.imageId)
+        text_view_city.text = city.name
+        text_view_weather.setText(city.descriptionId)
+        image_weather_activity.setImageResource(city.imageId)
 
-        btShareWeather.setOnClickListener {
+        share_button.setOnClickListener {
             var shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.putExtra(Intent.EXTRA_TEXT, tvCityName.text.toString() + ": " +
-                    tvWeather.text.toString())
+            shareIntent.putExtra(Intent.EXTRA_TEXT, text_view_city.text.toString() + ": " +
+                    text_view_weather.text.toString())
             shareIntent.type = "text/plain"
             startActivity(shareIntent)
 

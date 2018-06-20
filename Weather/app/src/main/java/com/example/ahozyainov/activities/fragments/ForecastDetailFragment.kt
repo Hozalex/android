@@ -7,17 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.TextView
 import com.example.ahozyainov.activities.R
+import kotlinx.android.synthetic.main.fragment_forecast_detail.*
 
 open class ForecastDetailFragment : android.support.v4.app.Fragment(), View.OnClickListener {
 
     private lateinit var checkBoxPressure: CheckBox
     private lateinit var checkBoxTomorrowForecast: CheckBox
     private lateinit var checkBoxWeekForecast: CheckBox
-    private lateinit var tvPressure: TextView
-    private lateinit var tvTomorrowForecast: TextView
-    private lateinit var tvWeekForecast: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,18 +29,16 @@ open class ForecastDetailFragment : android.support.v4.app.Fragment(), View.OnCl
         checkBoxTomorrowForecast.setOnClickListener(this)
         checkBoxWeekForecast = layout.findViewById(R.id.checkbox_week)
         checkBoxWeekForecast.setOnClickListener(this)
-        tvPressure = layout.findViewById(R.id.text_view_pressure)
-        tvTomorrowForecast = layout.findViewById(R.id.text_view_tomorrow_forecast)
-        tvWeekForecast = layout.findViewById(R.id.text_view_week_forecast)
+
 
 
         if (savedInstanceState != null) {
-            checkBoxPressure.isChecked = savedInstanceState.getBoolean("isCheckedPressure")
-            checkBoxTomorrowForecast.isChecked = savedInstanceState.getBoolean("isCheckedTomorrowForecast")
-            checkBoxWeekForecast.isChecked = savedInstanceState.getBoolean("isCheckedWeekForecast")
-            tvPressure.text = savedInstanceState.getString("tvPressure")
-            tvTomorrowForecast.text = savedInstanceState.getString("tvTomorrowForecast")
-            tvWeekForecast.text = savedInstanceState.getString("tvWeekForecast")
+            checkbox_pressure.isChecked = savedInstanceState.getBoolean("isCheckedPressure")
+            checkbox_tomorrow.isChecked = savedInstanceState.getBoolean("isCheckedTomorrowForecast")
+            checkbox_week.isChecked = savedInstanceState.getBoolean("isCheckedWeekForecast")
+            text_view_pressure.text = savedInstanceState.getString("tvPressure")
+            text_view_tomorrow_forecast.text = savedInstanceState.getString("tvTomorrowForecast")
+            text_view_week_forecast.text = savedInstanceState.getString("tvWeekForecast")
 
         }
 
@@ -51,52 +46,52 @@ open class ForecastDetailFragment : android.support.v4.app.Fragment(), View.OnCl
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean("isCheckedPressure", checkBoxPressure.isChecked)
-        outState.putBoolean("isCheckedTomorrowForecast", checkBoxTomorrowForecast.isChecked)
-        outState.putBoolean("isCheckedWeekForecast", checkBoxWeekForecast.isChecked)
-        outState.putString("tvPressure", tvPressure.text.toString())
-        outState.putString("tvTomorrowForecast", tvTomorrowForecast.text.toString())
-        outState.putString("tvWeekForecast", tvWeekForecast.text.toString())
+        outState.putBoolean("isCheckedPressure", checkbox_pressure.isChecked)
+        outState.putBoolean("isCheckedTomorrowForecast", checkbox_tomorrow.isChecked)
+        outState.putBoolean("isCheckedWeekForecast", checkbox_week.isChecked)
+        outState.putString("tvPressure", text_view_pressure.text.toString())
+        outState.putString("tvTomorrowForecast", text_view_tomorrow_forecast.text.toString())
+        outState.putString("tvWeekForecast", text_view_week_forecast.text.toString())
         super.onSaveInstanceState(outState)
     }
 
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            checkBoxPressure.id -> onClickPressureCheckBox()
-            checkBoxTomorrowForecast.id -> onClickTomorrowForecastCheckBox()
-            checkBoxWeekForecast.id -> onClickWeekForecastCheckBox()
+            checkbox_pressure.id -> onClickPressureCheckBox()
+            checkbox_tomorrow.id -> onClickTomorrowForecastCheckBox()
+            checkbox_week.id -> onClickWeekForecastCheckBox()
 
         }
     }
 
     private fun onClickPressureCheckBox() {
-        if (checkBoxPressure.isChecked) {
-            tvPressure.text = resources.getString(R.string.pressure_value)
-            tvPressure.setBackgroundResource(R.color.colorBackground)
+        if (checkbox_pressure.isChecked) {
+            text_view_pressure.text = resources.getString(R.string.pressure_value)
+            text_view_pressure.setBackgroundResource(R.color.colorBackground)
         } else {
-            tvPressure.text = ""
-            tvPressure.setBackgroundColor(0)
+            text_view_pressure.text = ""
+            text_view_pressure.setBackgroundColor(0)
         }
     }
 
     private fun onClickTomorrowForecastCheckBox() {
-        if (checkBoxTomorrowForecast.isChecked) {
-            tvTomorrowForecast.text = resources.getString(R.string.tomorrow_weather)
-            tvTomorrowForecast.setBackgroundResource(R.color.colorBackground)
+        if (checkbox_tomorrow.isChecked) {
+            text_view_tomorrow_forecast.text = resources.getString(R.string.tomorrow_weather)
+            text_view_tomorrow_forecast.setBackgroundResource(R.color.colorBackground)
         } else {
-            tvTomorrowForecast.text = ""
-            tvTomorrowForecast.setBackgroundColor(0)
+            text_view_tomorrow_forecast.text = ""
+            text_view_tomorrow_forecast.setBackgroundColor(0)
         }
     }
 
     private fun onClickWeekForecastCheckBox() {
-        if (checkBoxWeekForecast.isChecked) {
-            tvWeekForecast.text = resources.getString(R.string.week_weather)
-            tvWeekForecast.setBackgroundResource(R.color.colorBackground)
+        if (checkbox_week.isChecked) {
+            text_view_week_forecast.text = resources.getString(R.string.week_weather)
+            text_view_week_forecast.setBackgroundResource(R.color.colorBackground)
         } else {
-            tvWeekForecast.text = ""
-            tvWeekForecast.setBackgroundColor(0)
+            text_view_week_forecast.text = ""
+            text_view_week_forecast.setBackgroundColor(0)
         }
     }
 

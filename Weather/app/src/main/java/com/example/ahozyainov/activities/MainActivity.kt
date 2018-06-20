@@ -5,25 +5,24 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
-import com.example.ahozyainov.activities.R.id.drawer_layout
+import android.widget.PopupMenu
+import android.widget.Toast
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.Cities
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -31,17 +30,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val mySettings = "mySettings"
     private val sendRequestCode = 1
     private lateinit var settings: SharedPreferences
-    private lateinit var textView: TextView
-    private lateinit var checkBoxPressure: CheckBox
-    private lateinit var checkBoxTomorrowForecast: CheckBox
-    private lateinit var checkBoxWeekForecast: CheckBox
-    private lateinit var rvCities: RecyclerView
     private var twoPane: Boolean = false
-    private lateinit var imageMain: ImageView
-    private lateinit var floatingActionButton: FloatingActionButton
-    private lateinit var toolbar: Toolbar
-    private lateinit var navView: NavigationView
-    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,36 +38,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         twoPane = findViewById<View>(R.id.flRightContainer) != null
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
-        textView = findViewById(R.id.text_view_main)
-        floatingActionButton = findViewById(R.id.popButton)
-        drawerLayout = findViewById(R.id.drawer_layout)
-        toolbar = findViewById(R.id.toolbar)
-        imageMain = findViewById(com.example.ahozyainov.activities.R.id.image_Main)
-        navView = findViewById(R.id.nav_view)
-        rvCities = findViewById(R.id.rvCities)
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
         if (savedInstanceState != null) {
             sharedText = savedInstanceState.getString(IntentHelper.EXTRA_SHARED_WEATHER)
-            textView.text = sharedText
+            text_view_main.text = sharedText
         }
 
         setSupportActionBar(toolbar)
         initActionBar()
-        navView.setNavigationItemSelectedListener(this)
+        nav_view.setNavigationItemSelectedListener(this)
 
         addAdapter(savedInstanceState)
-//        checkBoxChecked()
         initPopUpMenu()
-
-//        checkSettings()
 
     }
 
     private fun initActionBar() {
         val toggle = ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.open, R.string.close)
-        drawerLayout.addDrawerListener(toggle)
+                this, drawer_layout, toolbar, R.string.open, R.string.close)
+        drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
     }
 
@@ -109,14 +88,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
         }
-        drawerLayout.closeDrawer(GravityCompat.START)
+        drawer_layout.closeDrawer(GravityCompat.START)
         return true
 
     }
 
-
     private fun initPopUpMenu() {
-        floatingActionButton.setOnClickListener {
+        popButton.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
             menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener {
@@ -143,18 +121,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun checkBoxChecked() {
-        checkBoxPressure.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, b)
-        }
-        checkBoxTomorrowForecast.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_TOMORROW, b)
-        }
-        checkBoxWeekForecast.setOnCheckedChangeListener { compoundButton, b ->
-            intent.putExtra(IntentHelper.EXTRA_CHECKBOX_WEEK, b)
-        }
-    }
-
     private fun addAdapter(savedInstanceState: Bundle?) {
         rvCities.adapter = CityAdapter(Cities.getAllCities(this), CityAdapter.OnCityClickListener { cityPosition ->
             run {
@@ -164,14 +130,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     startActivityForResult(intent, sendRequestCode)
                 } else {
                     showWeatherForecastFragment(cityPosition)
-                    floatingActionButton.hide()
+                    popButton.hide()
                 }
             }
         })
 
         if (twoPane && savedInstanceState == null) {
             showWeatherForecastFragment(0)
-            floatingActionButton.hide()
+            popButton.hide()
         }
 
         rvCities.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
@@ -232,14 +198,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .commit()
     }
 
-
-    override fun onStop() {
-        super.onStop()
-//        settings.edit().putBoolean(checkBoxPressure.text.toString(), checkBoxPressure.isChecked).apply()
-//        settings.edit().putBoolean(checkBoxTomorrowForecast.text.toString(), checkBoxTomorrowForecast.isChecked).apply()
-//        settings.edit().putBoolean(checkBoxWeekForecast.text.toString(), checkBoxWeekForecast.isChecked).apply()
-    }
-
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putString(IntentHelper.EXTRA_SHARED_WEATHER, sharedText)
         super.onSaveInstanceState(outState)
@@ -249,22 +207,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (requestCode == sendRequestCode) {
             if (resultCode == Activity.RESULT_OK) {
                 sharedText = data!!.getStringExtra(IntentHelper.EXTRA_SHARED_WEATHER)
-                textView.text = sharedText
+                text_view_main.text = sharedText
             }
         }
-    }
-
-    private fun checkSettings() {
-        if (settings.getBoolean(checkBoxPressure.text.toString(), checkBoxPressure.isChecked)) {
-            checkBoxPressure.isChecked = true
-        }
-        if (settings.getBoolean(checkBoxTomorrowForecast.text.toString(), checkBoxTomorrowForecast.isChecked)) {
-            checkBoxTomorrowForecast.isChecked = true
-        }
-        if (settings.getBoolean(checkBoxWeekForecast.text.toString(), checkBoxWeekForecast.isChecked)) {
-            checkBoxWeekForecast.isChecked = true
-        }
-
     }
 
 
