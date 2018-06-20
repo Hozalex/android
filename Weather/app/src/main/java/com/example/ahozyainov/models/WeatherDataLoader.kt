@@ -1,5 +1,6 @@
 package com.example.ahozyainov.models
 
+import android.util.Log
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -20,6 +21,7 @@ class WeatherDataLoader {
         fun getJSONData(city: String): JSONObject? {
             try {
                 var url = URL(String.format(POST_URL_API, city))
+                Log.d("post", url.toString())
                 var connection: HttpURLConnection = url.openConnection() as HttpURLConnection
                 connection.addRequestProperty(KEY, API_KEY)
 

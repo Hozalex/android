@@ -24,7 +24,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
+{
 
     private var sharedText = ""
     private val mySettings = "mySettings"
@@ -32,7 +33,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var settings: SharedPreferences
     private var twoPane: Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -40,7 +42,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null)
+        {
             sharedText = savedInstanceState.getString(IntentHelper.EXTRA_SHARED_WEATHER)
             text_view_main.text = sharedText
         }
@@ -54,34 +57,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    private fun initActionBar() {
+    private fun initActionBar()
+    {
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.open, R.string.close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_info -> {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean
+    {
+        when (item.itemId)
+        {
+            R.id.menu_info ->
+            {
                 val toast = Toast.makeText(applicationContext, R.string.attention_info, Toast.LENGTH_LONG)
                 toast.duration = Toast.LENGTH_LONG
                 toast.show()
                 return true
             }
-            R.id.menu_about -> {
+            R.id.menu_about ->
+            {
                 val toast = Toast.makeText(applicationContext, R.string.about_text, Toast.LENGTH_LONG)
                 toast.duration = Toast.LENGTH_LONG
                 toast.show()
                 return true
             }
-            R.id.menu_feedback -> {
+            R.id.menu_feedback ->
+            {
                 intent = Intent(Intent.ACTION_SEND)
                 intent.type = "message/email"
                 intent.putExtra(Intent.EXTRA_EMAIL, getText(R.string.feedback_mail_to))
                 intent.putExtra(Intent.EXTRA_SUBJECT, getText(R.string.feedback_mail_subject))
 
-                if (intent.resolveActivity(packageManager) != null) {
+                if (intent.resolveActivity(packageManager) != null)
+                {
                     startActivity(intent)
                 }
 
@@ -93,25 +103,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    private fun initPopUpMenu() {
+    private fun initPopUpMenu()
+    {
         popButton.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
             menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.pressure_menu_checkbox -> {
+                when (it.itemId)
+                {
+                    R.id.pressure_menu_checkbox ->
+                    {
                         it.isChecked = !it.isChecked
                         true
                     }
-                    R.id.tomorrow_menu_checkbox -> {
+                    R.id.tomorrow_menu_checkbox ->
+                    {
 
                         true
                     }
-                    R.id.week_menu_checkbox -> {
+                    R.id.week_menu_checkbox ->
+                    {
 
                         true
                     }
-                    else -> {
+                    else ->
+                    {
                         false
                     }
                 }
@@ -121,21 +137,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun addAdapter(savedInstanceState: Bundle?) {
+    private fun addAdapter(savedInstanceState: Bundle?)
+    {
         rvCities.adapter = CityAdapter(Cities.getAllCities(this), CityAdapter.OnCityClickListener { cityPosition ->
             run {
-                if (!twoPane) {
+                if (!twoPane)
+                {
                     intent = Intent(this, WeatherActivity::class.java)
                     intent.putExtra(IntentHelper.EXTRA_CITY_POSITION, cityPosition)
                     startActivityForResult(intent, sendRequestCode)
-                } else {
+                } else
+                {
                     showWeatherForecastFragment(cityPosition)
                     popButton.hide()
                 }
             }
         })
 
-        if (twoPane && savedInstanceState == null) {
+        if (twoPane && savedInstanceState == null)
+        {
             showWeatherForecastFragment(0)
             popButton.hide()
         }
@@ -144,22 +164,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.menu_add -> {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean
+    {
+        when (item!!.itemId)
+        {
+            R.id.menu_add ->
+            {
                 addCity()
                 return true
             }
-            R.id.menu_clear -> {
+            R.id.menu_clear ->
+            {
                 clearCities()
                 return true
             }
-            R.id.menu_delete -> {
+            R.id.menu_delete ->
+            {
                 settings.edit().clear()
                 this.onResume()
                 return true
@@ -170,42 +196,51 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
+    override fun onContextItemSelected(item: MenuItem?): Boolean
+    {
         val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
         toast.show()
         return super.onContextItemSelected(item)
     }
 
 
-    private fun deleteCity() {
+    private fun deleteCity()
+    {
         val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
         toast.show()
     }
 
-    private fun clearCities() {
+    private fun clearCities()
+    {
         val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
         toast.show()
     }
 
-    private fun addCity() {
+    private fun addCity()
+    {
         intent = Intent(this, AddCityActivity::class.java)
         startActivity(intent)
     }
 
-    private fun showWeatherForecastFragment(cityPosition: Int) {
+    private fun showWeatherForecastFragment(cityPosition: Int)
+    {
         supportFragmentManager.beginTransaction().replace(R.id.flRightContainer,
                 WeatherForecastFragment.newInstance(cityPosition))
                 .commit()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle?)
+    {
         outState?.putString(IntentHelper.EXTRA_SHARED_WEATHER, sharedText)
         super.onSaveInstanceState(outState)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == sendRequestCode) {
-            if (resultCode == Activity.RESULT_OK) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        if (requestCode == sendRequestCode)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
                 sharedText = data!!.getStringExtra(IntentHelper.EXTRA_SHARED_WEATHER)
                 text_view_main.text = sharedText
             }

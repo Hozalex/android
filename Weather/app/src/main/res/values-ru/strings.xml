@@ -6,10 +6,6 @@
 
     <string name="rainy">+10 Сегодня Дождь</string>
     <string name="sunny">+20 Сегодня Солнечно</string>
-    <string name="moscow_city">Москва</string>
-    <string name="spb_city">Санкт-Петербург</string>
-    <string name="paris_city">Париж</string>
-    <string name="madrid_city">Мадрид</string>
 
     <string name="pressure">Давление</string>
     <string name="tomorrow_forecast">Прогноз на завтра</string>
