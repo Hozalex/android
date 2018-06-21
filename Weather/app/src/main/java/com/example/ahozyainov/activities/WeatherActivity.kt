@@ -1,5 +1,6 @@
 package com.example.ahozyainov.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +8,12 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import com.example.ahozyainov.activities.R.id.*
 import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.Cities
 import com.example.ahozyainov.models.WeatherDataLoader
 import kotlinx.android.synthetic.main.activity_weather.*
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
@@ -61,7 +64,6 @@ class WeatherActivity : AppCompatActivity()
         var city: Cities = Cities.getAllCities(this)[position]
         updateWeatherData(city.name)
         image_weather_activity.setImageResource(city.imageId)
-        text_view_weather.text = resources.getString(city.descriptionId)
 
     }
 
@@ -84,34 +86,42 @@ class WeatherActivity : AppCompatActivity()
         }
     }
 
-    fun updateWeatherData(city: String)
+    private fun updateWeatherData(city: String)
     {
-        Thread().run {
+        Thread(Runnable {
             var json: JSONObject? = WeatherDataLoader.getJSONData(city)
-            Log.d("json", "json" + json.toString())
             if (json == null)
             {
-                handler.post(Runnable {
+                handler.post {
                     Toast.makeText(applicationContext, getString(R.string.city_not_found), Toast.LENGTH_LONG).show()
-                })
+                }
             } else
             {
-                handler.post(Runnable {
+                handler.post {
                     renderWeather(json)
-                })
+                }
             }
-
-        }
+        }).start()
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderWeather(json: JSONObject)
     {
-        Log.d("json_tag", "json" + json.toString())
         try
         {
+            var weatherDescription = json.getJSONArray("weather").getJSONObject(0).getString("main")
             text_view_city.text = json.getString("name").toUpperCase(Locale.US) + ", " +
                     json.getJSONObject("sys").getString("country")
+            text_view_weather.text = json.getJSONObject("main").getString("temp") + "\u2103" + " " +
+                    json.getJSONArray("weather").getJSONObject(0).getString("description")
+            when (weatherDescription)
+            {
+                "Clear" -> image_weather_activity.setImageResource(R.drawable.sunny)
+                "Clouds" -> image_weather_activity.setImageResource(R.drawable.cloudly)
+                "Rain" -> image_weather_activity.setImageResource(R.drawable.rainy)
+                else -> image_weather_activity.setImageResource(R.drawable.start)
+            }
         } catch (e: Exception)
         {
             e.printStackTrace()

@@ -2,18 +2,21 @@ package com.example.ahozyainov.activities
 
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.Toast
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
@@ -218,8 +221,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun addCity()
     {
-        intent = Intent(this, AddCityActivity::class.java)
-        startActivity(intent)
+        var alert = AlertDialog.Builder(this)
+        alert.setTitle(R.string.input_city)
+        var inputText = EditText(this)
+        alert.setView(inputText)
+        alert.setPositiveButton("Ok", DialogInterface.OnClickListener { dialogInterface, i ->
+            if (inputText.text != null)
+            {
+                //TODO
+            }
+        })
+        alert.show()
     }
 
     private fun showWeatherForecastFragment(cityPosition: Int)

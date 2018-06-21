@@ -7,9 +7,11 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class WeatherDataLoader {
+class WeatherDataLoader
+{
 
-    companion object {
+    companion object
+    {
 
         private const val POST_URL_API = "http://api.openweathermap.org/data/2.5/weather?q=%s&units=metric"
         private const val KEY = "x-api-key"
@@ -18,10 +20,11 @@ class WeatherDataLoader {
         private const val RESPONSE_CODE_OK = 200
 
         @JvmStatic
-        fun getJSONData(city: String): JSONObject? {
-            try {
+        fun getJSONData(city: String): JSONObject?
+        {
+            try
+            {
                 var url = URL(String.format(POST_URL_API, city))
-                Log.d("post", url.toString())
                 var connection: HttpURLConnection = url.openConnection() as HttpURLConnection
                 connection.addRequestProperty(KEY, API_KEY)
 
@@ -29,7 +32,8 @@ class WeatherDataLoader {
                 var rawData = StringBuilder(1024)
                 var temp: String
 
-                while (true) {
+                while (true)
+                {
                     temp = reader.readLine() ?: break
                     rawData.append(temp).append("\n")
                 }
@@ -38,13 +42,15 @@ class WeatherDataLoader {
 
                 var jsonObject = JSONObject(rawData.toString())
 
-                if (jsonObject.getInt(RESPONSE_CODE) != RESPONSE_CODE_OK) {
+                if (jsonObject.getInt(RESPONSE_CODE) != RESPONSE_CODE_OK)
+                {
                     return null
                 }
 
                 return jsonObject
 
-            } catch (e: Exception) {
+            } catch (e: Exception)
+            {
                 e.printStackTrace()
                 return null
             }
