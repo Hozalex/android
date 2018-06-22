@@ -25,6 +25,10 @@ public class Cities {
         this.imageId = imageId;
     }
 
+    public Cities(String name) {
+        this.name = name;
+    }
+
 
     public static Cities[] getAllCities(Context context) {
         return new Cities[]{
@@ -35,6 +39,13 @@ public class Cities {
         };
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }
 

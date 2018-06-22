@@ -12,13 +12,15 @@ import android.widget.TextView;
 import com.example.ahozyainov.activities.R;
 import com.example.ahozyainov.models.Cities;
 
+import java.util.ArrayList;
+
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder> {
 
-    private Cities citiesData[];
     private OnCityClickListener onCityClickListener;
+    private ArrayList<Cities> citiesArrayList;
 
-    public CityAdapter(Cities[] citiesData, OnCityClickListener onCityClickListener) {
-        this.citiesData = citiesData;
+    public CityAdapter(ArrayList<Cities> citiesArrayList, OnCityClickListener onCityClickListener) {
+        this.citiesArrayList = citiesArrayList;
         this.onCityClickListener = onCityClickListener;
 
     }
@@ -39,13 +41,14 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CityViewHolder holder, int position) {
-        holder.tvTitle.setText(citiesData[position].name);
+        holder.tvTitle.setText((citiesArrayList.get(position).name).toUpperCase());
+
     }
 
 
     @Override
     public int getItemCount() {
-        return citiesData.length;
+        return citiesArrayList.size();
     }
 
     static class CityViewHolder extends RecyclerView.ViewHolder {

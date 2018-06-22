@@ -25,9 +25,6 @@
             android:name=".WeatherActivity"
 
             android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".AddCityActivity"
-            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

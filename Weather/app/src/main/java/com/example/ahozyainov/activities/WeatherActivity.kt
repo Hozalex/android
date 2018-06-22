@@ -33,7 +33,7 @@ class WeatherActivity : AppCompatActivity()
         getIntent = intent
         lastShare = resources.getString(R.string.last_share_weather)
 
-        showWeather(getIntent.getIntExtra(IntentHelper.EXTRA_CITY_POSITION, 0))
+        showWeather(getIntent.getStringExtra(IntentHelper.EXTRA_CITY_NAME))
         showForecast()
 
         share_button.setOnClickListener {
@@ -59,11 +59,9 @@ class WeatherActivity : AppCompatActivity()
         setResult(Activity.RESULT_OK, intent)
     }
 
-    private fun showWeather(position: Int)
+    private fun showWeather(cityName: String)
     {
-        var city: Cities = Cities.getAllCities(this)[position]
-        updateWeatherData(city.name)
-        image_weather_activity.setImageResource(city.imageId)
+        updateWeatherData(cityName)
 
     }
 

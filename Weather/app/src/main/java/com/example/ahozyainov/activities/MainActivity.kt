@@ -6,6 +6,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -16,8 +18,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
@@ -27,7 +31,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
+class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
 
     private var sharedText = ""
@@ -35,6 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val sendRequestCode = 1
     private lateinit var settings: SharedPreferences
     private var twoPane: Boolean = false
+    private lateinit var citiesArrayList: ArrayList<Cities>
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -43,12 +48,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         twoPane = findViewById<View>(R.id.flRightContainer) != null
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
+        citiesArrayList = ArrayList(10)
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
         if (savedInstanceState != null)
         {
-            sharedText = savedInstanceState.getString(IntentHelper.EXTRA_SHARED_WEATHER)
-            text_view_main.text = sharedText
+            setSavedInstanceCity(savedInstanceState)
         }
 
         setSupportActionBar(toolbar)
@@ -58,6 +63,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         addAdapter(savedInstanceState)
         initPopUpMenu()
 
+    }
+
+    private fun setSavedInstanceCity(savedInstanceState: Bundle)
+    {
+        var cityList = savedInstanceState.getStringArrayList(IntentHelper.EXTRA_ARRAY_CITIES)
+        for (cityName in cityList)
+        {
+            citiesArrayList.add(Cities(cityName))
+        }
     }
 
     private fun initActionBar()
@@ -142,12 +156,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun addAdapter(savedInstanceState: Bundle?)
     {
-        rvCities.adapter = CityAdapter(Cities.getAllCities(this), CityAdapter.OnCityClickListener { cityPosition ->
+        rvCities.adapter = CityAdapter(citiesArrayList, CityAdapter.OnCityClickListener { cityPosition ->
             run {
                 if (!twoPane)
                 {
                     intent = Intent(this, WeatherActivity::class.java)
-                    intent.putExtra(IntentHelper.EXTRA_CITY_POSITION, cityPosition)
+                    intent.putExtra(IntentHelper.EXTRA_CITY_NAME, citiesArrayList[cityPosition].name)
                     startActivityForResult(intent, sendRequestCode)
                 } else
                 {
@@ -189,8 +203,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.menu_delete ->
             {
-                settings.edit().clear()
-                this.onResume()
                 return true
             }
 
@@ -201,8 +213,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onContextItemSelected(item: MenuItem?): Boolean
     {
-        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
-        toast.show()
+
+//        for (city in citiesArrayList)
+//        {
+//            if (city.name == textView.text)
+//            {
+//                citiesArrayList.remove(city)
+//                addAdapter(savedInstanceState = Bundle())
+//            }
+//        }
         return super.onContextItemSelected(item)
     }
 
@@ -225,12 +244,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         alert.setTitle(R.string.input_city)
         var inputText = EditText(this)
         alert.setView(inputText)
-        alert.setPositiveButton("Ok", DialogInterface.OnClickListener { dialogInterface, i ->
-            if (inputText.text != null)
+        alert.setPositiveButton("Ok") { dialogInterface, i ->
+            if (inputText.text.isNotEmpty())
             {
-                //TODO
+                citiesArrayList.add(Cities(inputText.text.toString()))
+                addAdapter(savedInstanceState = Bundle())
             }
-        })
+        }
         alert.show()
     }
 
@@ -243,8 +263,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onSaveInstanceState(outState: Bundle?)
     {
+
         outState?.putString(IntentHelper.EXTRA_SHARED_WEATHER, sharedText)
+        outState?.putStringArrayList(IntentHelper.EXTRA_ARRAY_CITIES, getArrayListCities())
         super.onSaveInstanceState(outState)
+    }
+
+    private fun getArrayListCities(): ArrayList<String>
+    {
+        var cityListName: ArrayList<String> = ArrayList()
+        for (city in citiesArrayList)
+        {
+            cityListName.add(city.name)
+        }
+
+        return cityListName
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
@@ -258,7 +291,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
     }
-
 
 }
 
