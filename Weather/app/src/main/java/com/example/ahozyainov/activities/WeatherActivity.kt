@@ -3,6 +3,8 @@ package com.example.ahozyainov.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
@@ -23,6 +25,10 @@ class WeatherActivity : AppCompatActivity()
     private lateinit var lastShare: String
     private lateinit var getIntent: Intent
     private lateinit var handler: Handler
+    private var isPressureChecked: Boolean = false
+    private var isHumidityChecked: Boolean = false
+    private var isWindChecked: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -33,8 +39,9 @@ class WeatherActivity : AppCompatActivity()
         getIntent = intent
         lastShare = resources.getString(R.string.last_share_weather)
 
-        showWeather(getIntent.getStringExtra(IntentHelper.EXTRA_CITY_NAME))
-        showForecast()
+        checkWeatherDetails()
+        updateWeatherData(getIntent.getStringExtra(IntentHelper.EXTRA_CITY_NAME))
+
 
         share_button.setOnClickListener {
             shareWeather()
@@ -59,28 +66,19 @@ class WeatherActivity : AppCompatActivity()
         setResult(Activity.RESULT_OK, intent)
     }
 
-    private fun showWeather(cityName: String)
-    {
-        updateWeatherData(cityName)
-
-    }
-
-    private fun showForecast()
+    private fun checkWeatherDetails()
     {
         if (intent.getBooleanExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, false))
         {
-            text_view_pressure.setBackgroundColor(resources.getColor(R.color.colorBackground))
-            text_view_pressure.text = resources.getString(R.string.pressure_value)
+            isPressureChecked = true
         }
-        if (intent.getBooleanExtra(IntentHelper.EXTRA_CHECKBOX_TOMORROW, false))
+        if (intent.getBooleanExtra(IntentHelper.EXTRA_CHECKBOX_HUMIDITY, false))
         {
-            text_view_tomorrow_forecast.setBackgroundColor(resources.getColor(R.color.colorBackground))
-            text_view_tomorrow_forecast.text = resources.getString(R.string.tomorrow_weather)
+            isHumidityChecked = true
         }
-        if (intent.getBooleanExtra(IntentHelper.EXTRA_CHECKBOX_WEEK, false))
+        if (intent.getBooleanExtra(IntentHelper.EXTRA_CHECKBOX_WIND, false))
         {
-            text_view_week_forecast.setBackgroundColor(resources.getColor(R.color.colorBackground))
-            text_view_week_forecast.text = resources.getString(R.string.week_weather)
+            isWindChecked = true
         }
     }
 
@@ -120,6 +118,22 @@ class WeatherActivity : AppCompatActivity()
                 "Rain" -> image_weather_activity.setImageResource(R.drawable.rainy)
                 else -> image_weather_activity.setImageResource(R.drawable.start)
             }
+            if (isPressureChecked)
+            {
+                text_view_pressure.text = "Pressure: " + json.getJSONObject("main").getString("pressure") + " " + "hpa"
+                text_view_pressure.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
+            }
+            if (isHumidityChecked)
+            {
+                text_view_humidity.text = "Humidity: " + json.getJSONObject("main").getString("humidity") + " " + "\u0025"
+                text_view_humidity.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
+            }
+            if (isWindChecked)
+            {
+                text_view_wind.text = "Wind: " + json.getJSONObject("wind").getString("speed") + " " + "m/s"
+                text_view_wind.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
+            }
+
         } catch (e: Exception)
         {
             e.printStackTrace()

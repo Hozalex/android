@@ -53,14 +53,14 @@
             android:layout_margin="4dp" />
 
         <TextView
-            android:id="@+id/text_view_tomorrow_forecast"
+            android:id="@+id/text_view_humidity"
             style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp" />
 
         <TextView
-            android:id="@+id/text_view_week_forecast"
+            android:id="@+id/text_view_wind"
             style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

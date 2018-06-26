@@ -4,6 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -12,19 +16,23 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import com.example.ahozyainov.activities.R.drawable.avatar
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
+import com.example.ahozyainov.models.AvatarDataLoader.Companion.getAvatar
 import com.example.ahozyainov.models.Cities
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_layout.*
 import java.io.*
+import java.net.URL
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
@@ -38,6 +46,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var cityListFileName = "CityList"
     private var avatarFileName = "avatar"
     private lateinit var path: String
+    private lateinit var popupMenu: PopupMenu
+    private var isPressureChecked: Boolean = false
+    private var isHumidityChecked: Boolean = false
+    private var isWindChecked: Boolean = false
+    private lateinit var ava: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -47,7 +60,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         twoPane = findViewById<View>(R.id.flRightContainer) != null
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         citiesArrayList = ArrayList(10)
-
+        ava = nav_view.getHeaderView(0).findViewById(R.id.ivHeader)
+        GetAvatar(ava).execute("http://graph.facebook.com/100000057955641/picture?type=square")
         path = filesDir.toString()
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
@@ -58,14 +72,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         {
             setSavedInstanceCity(savedInstanceState)
         }
+        if (settings != null)
+        {
+            getSettings()
+        }
 
         setSupportActionBar(toolbar)
+
         initActionBar()
+
         nav_view.setNavigationItemSelectedListener(this)
         addAdapter(savedInstanceState)
-        initPopUpMenu()
+        initPopUpMenu(popButton)
 
 
+    }
+
+    private fun getSettings()
+    {
+        isPressureChecked = settings.getBoolean(IntentHelper.EXTRA_CHECKBOX_PRESSURE, true)
+        isHumidityChecked = settings.getBoolean(IntentHelper.EXTRA_CHECKBOX_HUMIDITY, true)
+        isWindChecked = settings.getBoolean(IntentHelper.EXTRA_CHECKBOX_WIND, true)
     }
 
     private fun setSavedInstanceCity(savedInstanceState: Bundle)
@@ -126,34 +153,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    private fun initPopUpMenu()
+    private fun initPopUpMenu(it: View)
     {
+        popupMenu = PopupMenu(this, it)
+        menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+
         popButton.setOnClickListener {
-            val popupMenu = PopupMenu(this, it)
-            menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+
             popupMenu.setOnMenuItemClickListener {
+
                 when (it.itemId)
                 {
                     R.id.pressure_menu_checkbox ->
                     {
-                        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
-                        toast.show()
                         it.isChecked = !it.isChecked
-                        true
+                        isPressureChecked = it.isChecked
+                        false
                     }
                     R.id.humidity_menu_checkbox ->
                     {
-                        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
-                        toast.show()
                         it.isChecked = !it.isChecked
-                        true
+                        isHumidityChecked = it.isChecked
+                        false
                     }
                     R.id.wind_menu_checkbox ->
                     {
-                        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
-                        toast.show()
                         it.isChecked = !it.isChecked
-                        true
+                        isWindChecked = it.isChecked
+                        false
                     }
                     else ->
                     {
@@ -174,6 +201,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 {
                     intent = Intent(this, WeatherActivity::class.java)
                     intent.putExtra(IntentHelper.EXTRA_CITY_NAME, citiesArrayList[cityPosition].name)
+                    intent.putExtra(IntentHelper.EXTRA_CHECKBOX_PRESSURE, isPressureChecked)
+                    intent.putExtra(IntentHelper.EXTRA_CHECKBOX_HUMIDITY, isHumidityChecked)
+                    intent.putExtra(IntentHelper.EXTRA_CHECKBOX_WIND, isWindChecked)
                     startActivityForResult(intent, sendRequestCode)
                 } else
                 {
@@ -213,10 +243,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 clearCities()
                 return true
             }
-            R.id.menu_delete ->
-            {
-                return true
-            }
 
         }
         return super.onOptionsItemSelected(item)
@@ -247,6 +273,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val alert = AlertDialog.Builder(this)
         alert.setTitle(R.string.input_city)
         val inputText = EditText(this)
+        inputText.setPaddingRelative(16, 0, 0, 0)
         alert.setView(inputText)
         alert.setPositiveButton("Ok") { dialogInterface, i ->
             if (inputText.text.isNotEmpty())
@@ -299,8 +326,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onStop()
     {
         saveCityList(path + cityListFileName)
-        saveAvatarInternal(path + avatarFileName)
-        println(path)
+//        saveAvatarInternal(path + avatarFileName)
+        settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_PRESSURE, isPressureChecked).apply()
+        settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_HUMIDITY, isHumidityChecked).apply()
+        settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_WIND, isWindChecked).apply()
+
         super.onStop()
     }
 
@@ -356,54 +386,79 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    private fun saveAvatarInternal(path: String)
-    {
-        val avatar: File
-        try
-        {
-            avatar = File(path)
-            val fileOutputStream: FileOutputStream
-            val objectOutputStream: ObjectOutputStream
+//    private fun saveAvatarInternal(path: String)
+//    {
+//        val avatar: File
+//        try
+//        {
+//            avatar = File(path)
+//            val fileOutputStream: FileOutputStream
+//            val objectOutputStream: ObjectOutputStream
+//
+//            if (!avatar.exists())
+//            {
+//                avatar.createNewFile()
+//            }
+//
+//            fileOutputStream = FileOutputStream(avatar, false)
+//            objectOutputStream = ObjectOutputStream(fileOutputStream)
+//            objectOutputStream.writeObject(ivHeader)
+//
+//            fileOutputStream.close()
+//            objectOutputStream.close()
+//
+//        } catch (e: Exception)
+//        {
+//            e.printStackTrace()
+//        }
+//
+//    }
+//
+//    private fun readAvatarInternal(path: String)
+//    {
+//        val fileInputStream: FileInputStream
+//        val objectInputStream: ObjectInputStream
+//
+//        try
+//        {
+//            fileInputStream = FileInputStream(path)
+//            objectInputStream = ObjectInputStream(fileInputStream)
+//            val image = objectInputStream.readObject() as ImageView
+//
+//            fileInputStream.close()
+//            objectInputStream.close()
+//        } catch (e: Exception)
+//        {
+//            e.printStackTrace()
+//        }
+//
+//    }
 
-            if (!avatar.exists())
+    private class GetAvatar(var imageView: ImageView) : AsyncTask<String, Void, Bitmap>()
+    {
+
+        override fun doInBackground(vararg p0: String?): Bitmap?
+        {
+            val url = URL(p0[0])
+            var icon: Bitmap? = null
+            try
             {
-                avatar.createNewFile()
+                icon = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+
+            } catch (e: Exception)
+            {
+                Log.d("Error", e.message)
+                e.printStackTrace()
             }
+            return icon
+        }
 
-            fileOutputStream = FileOutputStream(avatar, false)
-            objectOutputStream = ObjectOutputStream(fileOutputStream)
-            objectOutputStream.writeObject(ivHeader)
-
-            fileOutputStream.close()
-            objectOutputStream.close()
-
-        } catch (e: Exception)
+        override fun onPostExecute(result: Bitmap?)
         {
-            e.printStackTrace()
+            imageView.setImageResource(R.drawable.abc_ic_star_black_16dp)
         }
 
     }
-
-    private fun readAvatarInternal(path: String)
-    {
-        val fileInputStream: FileInputStream
-        val objectInputStream: ObjectInputStream
-
-        try
-        {
-            fileInputStream = FileInputStream(path)
-            objectInputStream = ObjectInputStream(fileInputStream)
-            val image = objectInputStream.readObject() as ImageView
-
-            fileInputStream.close()
-            objectInputStream.close()
-        } catch (e: Exception)
-        {
-            e.printStackTrace()
-        }
-
-    }
-
 
 }
 
