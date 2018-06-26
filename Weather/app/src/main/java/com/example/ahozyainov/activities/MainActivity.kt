@@ -2,12 +2,9 @@ package com.example.ahozyainov.activities
 
 import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -18,11 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.PopupMenu
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
@@ -30,8 +23,10 @@ import com.example.ahozyainov.models.Cities
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.nav_header_layout.*
+import java.io.*
 
-class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
 
     private var sharedText = ""
@@ -40,6 +35,9 @@ class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var settings: SharedPreferences
     private var twoPane: Boolean = false
     private lateinit var citiesArrayList: ArrayList<Cities>
+    private var cityListFileName = "CityList"
+    private var avatarFileName = "avatar"
+    private lateinit var path: String
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -49,8 +47,13 @@ class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         twoPane = findViewById<View>(R.id.flRightContainer) != null
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         citiesArrayList = ArrayList(10)
+
+        path = filesDir.toString()
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
+        registerForContextMenu(rvCities)
+        readCityList(path + cityListFileName)
+
         if (savedInstanceState != null)
         {
             setSavedInstanceCity(savedInstanceState)
@@ -59,9 +62,9 @@ class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         setSupportActionBar(toolbar)
         initActionBar()
         nav_view.setNavigationItemSelectedListener(this)
-
         addAdapter(savedInstanceState)
         initPopUpMenu()
+
 
     }
 
@@ -76,11 +79,14 @@ class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     private fun initActionBar()
     {
+
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.open, R.string.close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+
     }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean
     {
@@ -130,22 +136,28 @@ class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 {
                     R.id.pressure_menu_checkbox ->
                     {
+                        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
+                        toast.show()
                         it.isChecked = !it.isChecked
                         true
                     }
-                    R.id.tomorrow_menu_checkbox ->
+                    R.id.humidity_menu_checkbox ->
                     {
-
+                        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
+                        toast.show()
+                        it.isChecked = !it.isChecked
                         true
                     }
-                    R.id.week_menu_checkbox ->
+                    R.id.wind_menu_checkbox ->
                     {
-
+                        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
+                        toast.show()
+                        it.isChecked = !it.isChecked
                         true
                     }
                     else ->
                     {
-                        false
+                        super.onOptionsItemSelected(it)
                     }
                 }
             }
@@ -214,14 +226,6 @@ class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onContextItemSelected(item: MenuItem?): Boolean
     {
 
-//        for (city in citiesArrayList)
-//        {
-//            if (city.name == textView.text)
-//            {
-//                citiesArrayList.remove(city)
-//                addAdapter(savedInstanceState = Bundle())
-//            }
-//        }
         return super.onContextItemSelected(item)
     }
 
@@ -234,15 +238,15 @@ class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     private fun clearCities()
     {
-        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
-        toast.show()
+        citiesArrayList.clear()
+        addAdapter(savedInstanceState = Bundle())
     }
 
     private fun addCity()
     {
-        var alert = AlertDialog.Builder(this)
+        val alert = AlertDialog.Builder(this)
         alert.setTitle(R.string.input_city)
-        var inputText = EditText(this)
+        val inputText = EditText(this)
         alert.setView(inputText)
         alert.setPositiveButton("Ok") { dialogInterface, i ->
             if (inputText.text.isNotEmpty())
@@ -291,6 +295,115 @@ class MainActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             }
         }
     }
+
+    override fun onStop()
+    {
+        saveCityList(path + cityListFileName)
+        saveAvatarInternal(path + avatarFileName)
+        println(path)
+        super.onStop()
+    }
+
+    private fun saveCityList(path: String)
+    {
+        var cityList: File
+        if (citiesArrayList.isNotEmpty())
+        {
+            try
+            {
+                cityList = File(path)
+                val fileOutputStream: FileOutputStream
+                val objectOutputStream: ObjectOutputStream
+
+                if (!cityList.exists())
+                {
+                    cityList.createNewFile()
+                }
+
+                fileOutputStream = FileOutputStream(cityList, false)
+                objectOutputStream = ObjectOutputStream(fileOutputStream)
+                objectOutputStream.writeObject(citiesArrayList)
+
+                fileOutputStream.close()
+                objectOutputStream.close()
+            } catch (e: Exception)
+            {
+                e.printStackTrace()
+            }
+
+        }
+
+    }
+
+    private fun readCityList(path: String)
+    {
+        var fileInputStream: FileInputStream
+        var objectInputStream: ObjectInputStream
+
+        try
+        {
+            fileInputStream = FileInputStream(path)
+            objectInputStream = ObjectInputStream(fileInputStream)
+            citiesArrayList = objectInputStream.readObject() as ArrayList<Cities>
+            addAdapter(savedInstanceState = Bundle())
+
+            fileInputStream.close()
+            objectInputStream.close()
+        } catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun saveAvatarInternal(path: String)
+    {
+        val avatar: File
+        try
+        {
+            avatar = File(path)
+            val fileOutputStream: FileOutputStream
+            val objectOutputStream: ObjectOutputStream
+
+            if (!avatar.exists())
+            {
+                avatar.createNewFile()
+            }
+
+            fileOutputStream = FileOutputStream(avatar, false)
+            objectOutputStream = ObjectOutputStream(fileOutputStream)
+            objectOutputStream.writeObject(ivHeader)
+
+            fileOutputStream.close()
+            objectOutputStream.close()
+
+        } catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun readAvatarInternal(path: String)
+    {
+        val fileInputStream: FileInputStream
+        val objectInputStream: ObjectInputStream
+
+        try
+        {
+            fileInputStream = FileInputStream(path)
+            objectInputStream = ObjectInputStream(fileInputStream)
+            val image = objectInputStream.readObject() as ImageView
+
+            fileInputStream.close()
+            objectInputStream.close()
+        } catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+
+    }
+
 
 }
 

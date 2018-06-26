@@ -8,8 +8,8 @@
     <string name="sunny">+20 Сегодня Солнечно</string>
 
     <string name="pressure">Давление</string>
-    <string name="tomorrow_forecast">Прогноз на завтра</string>
-    <string name="week_forecast">Прогноз на неделю</string>
+    <string name="tomorrow_forecast">Влажность</string>
+    <string name="week_forecast">Ветер</string>
     <string name="pressure_value">760 мм.рт.ст</string>
     <string name="tomorrow_weather">+30 Будет Солнечно</string>
     <string name="week_weather">Всю неделю будет хорошая погода</string>

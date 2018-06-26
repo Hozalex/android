@@ -13,8 +13,7 @@
         android:id="@+id/ivHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        app:srcCompat="@drawable/avatar" />
+        android:paddingTop="8dp" />
 
     <TextView
         android:id="@+id/text_view_user_name"

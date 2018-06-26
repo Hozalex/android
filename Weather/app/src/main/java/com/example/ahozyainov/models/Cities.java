@@ -6,11 +6,12 @@ import android.support.annotation.StringRes;
 
 import com.example.ahozyainov.activities.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class Cities {
+public class Cities implements Serializable {
 
     public String name;
     public @StringRes

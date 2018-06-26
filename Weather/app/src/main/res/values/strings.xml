@@ -4,8 +4,8 @@
     <string name="share_button">Share the Weather</string>
     <string name="last_share_weather">You shared the weather: </string>
     <string name="pressure">Pressure</string>
-    <string name="tomorrow_forecast">Tomorrow Forecast</string>
-    <string name="week_forecast">Week Forecast</string>
+    <string name="tomorrow_forecast">Humidity</string>
+    <string name="week_forecast">Wind</string>
     <string name="pressure_value">760 mm</string>
     <string name="tomorrow_weather">+30 IT IS GOING TO SUNNY</string>
     <string name="week_weather">THERE WILL BE GOOD WEATHER</string>
