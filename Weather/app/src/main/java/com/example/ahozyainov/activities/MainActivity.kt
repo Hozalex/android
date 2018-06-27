@@ -6,9 +6,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Environment
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -20,17 +22,17 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
-import com.example.ahozyainov.activities.R.drawable.avatar
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.Toast
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
-import com.example.ahozyainov.models.AvatarDataLoader.Companion.getAvatar
 import com.example.ahozyainov.models.Cities
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.nav_header_layout.*
 import java.io.*
 import java.net.URL
 
@@ -43,14 +45,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var settings: SharedPreferences
     private var twoPane: Boolean = false
     private lateinit var citiesArrayList: ArrayList<Cities>
-    private var cityListFileName = "CityList"
-    private var avatarFileName = "avatar"
-    private lateinit var path: String
+    private var cityListFileName = "cityList"
+    private var avatarFileName = "default_avatar"
+    private lateinit var internalPath: String
+    private lateinit var externalPath: String
+    private var getAvatarUrl: String = "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/18194920_1733866159958632_3331095931294444894_n.jpg?_nc_cat=0&oh=57f7974c221699e603acfb99e8f7d5a1&oe=5BA8EBBD"
     private lateinit var popupMenu: PopupMenu
     private var isPressureChecked: Boolean = false
     private var isHumidityChecked: Boolean = false
     private var isWindChecked: Boolean = false
-    private lateinit var ava: ImageView
+    private lateinit var avatarImageView: ImageView
+    private lateinit var avatarData: AvatarData
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -60,13 +65,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         twoPane = findViewById<View>(R.id.flRightContainer) != null
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         citiesArrayList = ArrayList(10)
-        ava = nav_view.getHeaderView(0).findViewById(R.id.ivHeader)
-        GetAvatar(ava).execute("http://graph.facebook.com/100000057955641/picture?type=square")
-        path = filesDir.toString()
+        avatarImageView = nav_view.getHeaderView(0).findViewById(R.id.ivHeader)
+        internalPath = filesDir.toString()
+        externalPath = Environment.getExternalStorageDirectory().absolutePath.toString()
+        avatarData = AvatarData(avatarImageView, internalPath, externalPath, avatarFileName)
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
         registerForContextMenu(rvCities)
-        readCityList(path + cityListFileName)
+        readCityList(internalPath + cityListFileName)
+        readAvatarInternal(internalPath + avatarFileName)
 
         if (savedInstanceState != null)
         {
@@ -325,8 +332,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onStop()
     {
-        saveCityList(path + cityListFileName)
-//        saveAvatarInternal(path + avatarFileName)
+
+        saveCityList(internalPath + cityListFileName)
+
         settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_PRESSURE, isPressureChecked).apply()
         settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_HUMIDITY, isHumidityChecked).apply()
         settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_WIND, isWindChecked).apply()
@@ -386,56 +394,45 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-//    private fun saveAvatarInternal(path: String)
-//    {
-//        val avatar: File
-//        try
-//        {
-//            avatar = File(path)
-//            val fileOutputStream: FileOutputStream
-//            val objectOutputStream: ObjectOutputStream
-//
-//            if (!avatar.exists())
-//            {
-//                avatar.createNewFile()
-//            }
-//
-//            fileOutputStream = FileOutputStream(avatar, false)
-//            objectOutputStream = ObjectOutputStream(fileOutputStream)
-//            objectOutputStream.writeObject(ivHeader)
-//
-//            fileOutputStream.close()
-//            objectOutputStream.close()
-//
-//        } catch (e: Exception)
-//        {
-//            e.printStackTrace()
-//        }
-//
-//    }
-//
-//    private fun readAvatarInternal(path: String)
-//    {
-//        val fileInputStream: FileInputStream
-//        val objectInputStream: ObjectInputStream
-//
-//        try
-//        {
-//            fileInputStream = FileInputStream(path)
-//            objectInputStream = ObjectInputStream(fileInputStream)
-//            val image = objectInputStream.readObject() as ImageView
-//
-//            fileInputStream.close()
-//            objectInputStream.close()
-//        } catch (e: Exception)
-//        {
-//            e.printStackTrace()
-//        }
-//
-//    }
 
-    private class GetAvatar(var imageView: ImageView) : AsyncTask<String, Void, Bitmap>()
+    private fun readAvatarInternal(path: String)
     {
+        val fileInputStream: FileInputStream
+        val objectInputStream: ObjectInputStream
+        var bitmap: Bitmap? = null
+        try
+        {
+            fileInputStream = FileInputStream(path)
+            objectInputStream = ObjectInputStream(fileInputStream)
+            bitmap = getBitmapFromByteArray(objectInputStream.readObject() as ByteArray)
+            fileInputStream.close()
+            objectInputStream.close()
+        } catch (e: Exception)
+        {
+            e.printStackTrace()
+
+        }
+        if (bitmap == null)
+        {
+            avatarImageView.setImageBitmap(avatarData.execute(getAvatarUrl).get())
+        } else
+        {
+            avatarImageView.setImageBitmap(bitmap)
+        }
+
+    }
+
+    private fun getBitmapFromByteArray(bytes: ByteArray): Bitmap?
+    {
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    }
+
+
+    private class AvatarData(var imageView: ImageView, var internalPath: String, var externalPath: String,
+                             var fileName: String) : AsyncTask<String, Void, Bitmap>(), Serializable
+    {
+
+        var bmIcon: Bitmap? = null
 
         override fun doInBackground(vararg p0: String?): Bitmap?
         {
@@ -450,15 +447,97 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.d("Error", e.message)
                 e.printStackTrace()
             }
+            bmIcon = icon
             return icon
         }
 
         override fun onPostExecute(result: Bitmap?)
         {
-            imageView.setImageResource(R.drawable.abc_ic_star_black_16dp)
+            saveAvatarInternal()
+            saveAvatarExternal()
+
         }
 
+        private fun saveAvatarExternal()
+        {
+            val avatarExternalFilePath: File
+            val avatarExternalFile: File
+            val fileOutputStream: FileOutputStream
+            val objectOutputStream: ObjectOutputStream
+
+            avatarExternalFilePath = File(externalPath)
+            if (!avatarExternalFilePath.exists())
+            {
+                avatarExternalFilePath.mkdirs()
+            }
+            avatarExternalFile = File(avatarExternalFilePath, fileName)
+
+            try
+            {
+
+
+                fileOutputStream = FileOutputStream(avatarExternalFile, false)
+                objectOutputStream = ObjectOutputStream(fileOutputStream)
+                objectOutputStream.writeObject(getByteArrayFromDrawable(imageView.drawable))
+                fileOutputStream.close()
+                objectOutputStream.close()
+
+            } catch (e: Exception)
+            {
+                e.printStackTrace()
+            }
+        }
+
+        private fun saveAvatarInternal()
+        {
+            val avatarInternalFile: File
+
+
+            try
+            {
+                avatarInternalFile = File(internalPath + fileName)
+
+                val fileOutputStream: FileOutputStream
+                val objectOutputStream: ObjectOutputStream
+
+                if (!avatarInternalFile.exists())
+                {
+                    avatarInternalFile.createNewFile()
+                }
+
+                fileOutputStream = FileOutputStream(avatarInternalFile, false)
+                objectOutputStream = ObjectOutputStream(fileOutputStream)
+                objectOutputStream.writeObject(getByteArrayFromDrawable(imageView.drawable))
+                fileOutputStream.close()
+                objectOutputStream.close()
+
+
+            } catch (e: Exception)
+            {
+                e.printStackTrace()
+            }
+        }
+
+        private fun getByteArrayFromDrawable(drawable: Drawable): ByteArray?
+        {
+            var bitmap: Bitmap = (drawable as BitmapDrawable).bitmap
+            var bytes: ByteArray? = null
+            try
+            {
+                var stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                bytes = stream.toByteArray()
+            } catch (e: Exception)
+            {
+                e.printStackTrace()
+            }
+            return bytes
+
+        }
+
+
     }
+
 
 }
 
