@@ -2,6 +2,7 @@ package com.example.ahozyainov.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -14,6 +15,7 @@ import com.example.ahozyainov.activities.R.id.*
 import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.Cities
 import com.example.ahozyainov.models.WeatherDataLoader
+import com.example.ahozyainov.models.WeatherDatabaseHelper
 import kotlinx.android.synthetic.main.activity_weather.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -104,13 +106,26 @@ class WeatherActivity : AppCompatActivity()
     @SuppressLint("SetTextI18n")
     private fun renderWeather(json: JSONObject)
     {
+        lateinit var cityName: String
+        lateinit var weatherData: String
+        lateinit var humidity: String
+        lateinit var pressure: String
+        lateinit var wind: String
+
+
         try
         {
             var weatherDescription = json.getJSONArray("weather").getJSONObject(0).getString("main")
-            text_view_city.text = json.getString("name").toUpperCase(Locale.US) + ", " +
+            cityName = json.getString("name").toUpperCase(Locale.US) + ", " +
                     json.getJSONObject("sys").getString("country")
+            text_view_city.text = cityName
             text_view_weather.text = json.getJSONObject("main").getString("temp") + "\u2103" + " " +
                     json.getJSONArray("weather").getJSONObject(0).getString("description")
+            humidity = "Humidity: " + json.getJSONObject("main").getString("humidity") + " " + "\u0025"
+            pressure = "Pressure: " + json.getJSONObject("main").getString("pressure") + " " + "hpa"
+            wind = "Wind: " + json.getJSONObject("wind").getString("speed") + " " + "m/s"
+            weatherData = "$weatherDescription, $humidity, $pressure, $wind"
+            WeatherDatabaseHelper(context = this).cityWeather(cityName, weatherData)
             when (weatherDescription)
             {
                 "Clear" -> image_weather_activity.setImageResource(R.drawable.sunny)
@@ -120,17 +135,17 @@ class WeatherActivity : AppCompatActivity()
             }
             if (isPressureChecked)
             {
-                text_view_pressure.text = "Pressure: " + json.getJSONObject("main").getString("pressure") + " " + "hpa"
+                text_view_pressure.text = pressure
                 text_view_pressure.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
             }
             if (isHumidityChecked)
             {
-                text_view_humidity.text = "Humidity: " + json.getJSONObject("main").getString("humidity") + " " + "\u0025"
+                text_view_humidity.text = humidity
                 text_view_humidity.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
             }
             if (isWindChecked)
             {
-                text_view_wind.text = "Wind: " + json.getJSONObject("wind").getString("speed") + " " + "m/s"
+                text_view_wind.text = wind
                 text_view_wind.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
             }
 
