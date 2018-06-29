@@ -112,7 +112,6 @@ class WeatherActivity : AppCompatActivity()
         lateinit var pressure: String
         lateinit var wind: String
 
-
         try
         {
             var weatherDescription = json.getJSONArray("weather").getJSONObject(0).getString("main")
@@ -124,8 +123,7 @@ class WeatherActivity : AppCompatActivity()
             humidity = "Humidity: " + json.getJSONObject("main").getString("humidity") + " " + "\u0025"
             pressure = "Pressure: " + json.getJSONObject("main").getString("pressure") + " " + "hpa"
             wind = "Wind: " + json.getJSONObject("wind").getString("speed") + " " + "m/s"
-            weatherData = "$weatherDescription, $humidity, $pressure, $wind"
-            WeatherDatabaseHelper(context = this).cityWeather(cityName, weatherData)
+            writeDataToDatabase(weatherDescription, humidity, pressure, wind, cityName)
             when (weatherDescription)
             {
                 "Clear" -> image_weather_activity.setImageResource(R.drawable.sunny)
@@ -153,6 +151,20 @@ class WeatherActivity : AppCompatActivity()
         {
             e.printStackTrace()
         }
+
+    }
+
+    private fun writeDataToDatabase(weatherDescription: String?, humidity: String, pressure: String, wind: String, cityName: String)
+    {
+        var databaseHelper = WeatherDatabaseHelper(context = this)
+        var cursor = databaseHelper.getCityWeather()
+        cursor.moveToFirst()
+        var weatherData = "$weatherDescription, $humidity, $pressure, $wind"
+
+        databaseHelper.cityWeather(cityName, weatherData)
+
+        cursor.close()
+        databaseHelper.close()
 
     }
 
