@@ -1,5 +1,6 @@
 package com.example.ahozyainov.adapters;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -58,6 +59,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
         public CityViewHolder(final View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tvTitle.setClipToOutline(true);
+            }
             tvTitle.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {

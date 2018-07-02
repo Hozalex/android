@@ -26,6 +26,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
+import com.example.ahozyainov.activities.R.id.nav_view
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
@@ -281,6 +282,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         alert.setTitle(R.string.input_city)
         val inputText = EditText(this)
         inputText.setPaddingRelative(16, 0, 0, 0)
+
         alert.setView(inputText)
         alert.setPositiveButton("Ok") { dialogInterface, i ->
             if (inputText.text.isNotEmpty())

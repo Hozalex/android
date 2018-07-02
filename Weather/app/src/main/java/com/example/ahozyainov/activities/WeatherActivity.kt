@@ -2,22 +2,17 @@ package com.example.ahozyainov.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.Toast
-import com.example.ahozyainov.activities.R.id.*
 import com.example.ahozyainov.common.IntentHelper
-import com.example.ahozyainov.models.Cities
 import com.example.ahozyainov.models.WeatherDataLoader
 import com.example.ahozyainov.models.WeatherDatabaseHelper
 import kotlinx.android.synthetic.main.activity_weather.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
