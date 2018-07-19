@@ -28,6 +28,9 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <service
+            android:name="com.example.ahozyainov.services.WeatherDataLoadService"
+            android:exported="false" />
     </application>
 
 </manifest>
