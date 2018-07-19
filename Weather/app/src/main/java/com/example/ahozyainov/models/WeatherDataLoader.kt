@@ -1,6 +1,5 @@
 package com.example.ahozyainov.models
 
-import android.util.Log
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -24,12 +23,12 @@ class WeatherDataLoader
         {
             try
             {
-                var url = URL(String.format(POST_URL_API, city))
-                var connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+                val url = URL(String.format(POST_URL_API, city))
+                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
                 connection.addRequestProperty(KEY, API_KEY)
 
-                var reader = BufferedReader(InputStreamReader(connection.inputStream))
-                var rawData = StringBuilder(1024)
+                val reader = BufferedReader(InputStreamReader(connection.inputStream))
+                val rawData = StringBuilder(1024)
                 var temp: String
 
                 while (true)

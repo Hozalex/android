@@ -494,7 +494,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         {
             val avatarInternalFile: File
 
-
             try
             {
                 avatarInternalFile = File(internalPath + fileName)

@@ -82,7 +82,7 @@ class WeatherActivity : AppCompatActivity()
     private fun updateWeatherData(city: String)
     {
         Thread(Runnable {
-            var json: JSONObject? = WeatherDataLoader.getJSONData(city)
+            val json: JSONObject? = WeatherDataLoader.getJSONData(city)
             if (json == null)
             {
                 handler.post {
