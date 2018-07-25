@@ -1,6 +1,7 @@
 package com.example.ahozyainov.activities
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -22,15 +23,14 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.view.WindowManager
+import android.widget.*
 import com.example.ahozyainov.activities.R.id.nav_view
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.Cities
+import com.example.ahozyainov.models.WeatherDatabaseHelper
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -257,22 +257,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean
+    override fun onContextItemSelected(item: MenuItem): Boolean
     {
 
+        deleteCity(item.itemId)
         return super.onContextItemSelected(item)
     }
 
 
-    private fun deleteCity()
+    private fun deleteCity(itemId:Int)
     {
-        val toast = Toast.makeText(applicationContext, "меню в разработке", Toast.LENGTH_SHORT)
-        toast.show()
+        val databaseHelper = WeatherDatabaseHelper(context = this)
+        databaseHelper.deleteAllCities()
+        deleteCityList(internalPath + cityListFileName)
+        addAdapter(savedInstanceState = Bundle())
     }
 
     private fun clearCities()
     {
+        val databaseHelper = WeatherDatabaseHelper(context = this)
         citiesArrayList.clear()
+        databaseHelper.deleteAllCities()
+        deleteCityList(internalPath + cityListFileName)
         addAdapter(savedInstanceState = Bundle())
     }
 
@@ -281,8 +287,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val alert = AlertDialog.Builder(this)
         alert.setTitle(R.string.input_city)
         val inputText = EditText(this)
-        inputText.setPaddingRelative(16, 0, 0, 0)
-
         alert.setView(inputText)
         alert.setPositiveButton("Ok") { dialogInterface, i ->
             if (inputText.text.isNotEmpty())
@@ -292,6 +296,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
         alert.show()
+
     }
 
     private fun showWeatherForecastFragment(cityPosition: Int)
@@ -347,31 +352,46 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun saveCityList(path: String)
     {
         var cityList: File
-        if (citiesArrayList.isNotEmpty())
+
+        try
         {
+            cityList = File(path)
+            val fileOutputStream: FileOutputStream
+            val objectOutputStream: ObjectOutputStream
+
+            if (!cityList.exists())
+            {
+                cityList.createNewFile()
+            }
+
+            fileOutputStream = FileOutputStream(cityList, false)
+            objectOutputStream = ObjectOutputStream(fileOutputStream)
+            objectOutputStream.writeObject(citiesArrayList)
+
+            fileOutputStream.close()
+            objectOutputStream.close()
+        } catch (e: Exception)
+        {
+            e.printStackTrace()
+            Log.d("CityListFile", e.toString())
+        }
+
+
+    }
+
+    private fun deleteCityList(path: String)
+    {
+        var cityList: File
+        if (citiesArrayList.isNotEmpty())
             try
             {
                 cityList = File(path)
-                val fileOutputStream: FileOutputStream
-                val objectOutputStream: ObjectOutputStream
-
-                if (!cityList.exists())
-                {
-                    cityList.createNewFile()
-                }
-
-                fileOutputStream = FileOutputStream(cityList, false)
-                objectOutputStream = ObjectOutputStream(fileOutputStream)
-                objectOutputStream.writeObject(citiesArrayList)
-
-                fileOutputStream.close()
-                objectOutputStream.close()
+                cityList.delete()
             } catch (e: Exception)
             {
                 e.printStackTrace()
+                Log.d("CityListFile", e.toString())
             }
-
-        }
 
     }
 

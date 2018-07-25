@@ -2,19 +2,13 @@ package com.example.ahozyainov.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.Bundle
-import android.os.Handler
-import android.os.Parcel
-import android.os.Parcelable
+import android.content.*
+import android.os.*
+import android.support.annotation.UiThread
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import android.widget.Toast
-import com.example.ahozyainov.activities.R.id.text_view_city
-import com.example.ahozyainov.activities.R.id.text_view_humidity
+import com.example.ahozyainov.activities.R.id.*
 import com.example.ahozyainov.activities.R.string.last_share_weather
 import com.example.ahozyainov.activities.R.string.pressure
 import com.example.ahozyainov.common.IntentHelper
@@ -31,31 +25,34 @@ class WeatherActivity : AppCompatActivity()
 
     private lateinit var lastShare: String
     private lateinit var getIntent: Intent
-    private lateinit var handler: Handler
     private var isPressureChecked: Boolean = false
     private var isHumidityChecked: Boolean = false
     private var isWindChecked: Boolean = false
-    lateinit var weatherDescription: String
     private lateinit var broadcastReceiver: BroadcastReceiver
-    public lateinit var cityName: String
+
+
+    companion object
+    {
+        const val BROADCAST_ACTION = "com.example.ahozyainov.services.RESPONSE"
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
 
-        handler = Handler()
         getIntent = intent
         lastShare = resources.getString(R.string.last_share_weather)
 
         broadcastReceiver = WeatherBroadcastReceiver()
-        val intentFilter = IntentFilter("com.example.ahozyainov.services.RESPONSE")
-        intentFilter.addCategory(Intent.CATEGORY_DEFAULT)
-        registerReceiver(broadcastReceiver, intentFilter)
+        registerReceiver(broadcastReceiver, IntentFilter(BROADCAST_ACTION))
+
+
 
         checkWeatherDetails()
         updateWeatherData(getIntent.getStringExtra(IntentHelper.EXTRA_CITY_NAME))
-
 
         share_button.setOnClickListener {
             shareWeather()
@@ -63,10 +60,10 @@ class WeatherActivity : AppCompatActivity()
         }
     }
 
-    override fun onDestroy()
+    override fun onStop()
     {
-        super.onDestroy()
         unregisterReceiver(broadcastReceiver)
+        super.onStop()
     }
 
     private fun shareWeather()
@@ -102,7 +99,7 @@ class WeatherActivity : AppCompatActivity()
         }
     }
 
-    fun updateWeatherData(city: String)
+    private fun updateWeatherData(city: String)
     {
 
         val serviceIntent = Intent(this, WeatherDataLoadService::class.java)
@@ -125,106 +122,77 @@ class WeatherActivity : AppCompatActivity()
 
     }
 
-//    @SuppressLint("SetTextI18n")
-//    fun renderWeather(json: JSONObject)
-//    {
-//        lateinit var cityName: String
-//        lateinit var humidity: String
-//        lateinit var pressure: String
-//        lateinit var wind: String
-
-//        try
-//        {
-
-//            var weatherDescription = json.getJSONArray("weather").getJSONObject(0).getString("main")
-//            cityName = json.getString("name").toUpperCase(Locale.US) + ", " +
-//                    json.getJSONObject("sys").getString("country")
-//            text_view_city.text = cityName
-//            text_view_weather.text = json.getJSONObject("main").getString("temp") + "\u2103" + " " +
-//                    json.getJSONArray("weather").getJSONObject(0).getString("description")
-//            humidity = "Humidity: " + json.getJSONObject("main").getString("humidity") + " " + "\u0025"
-//            pressure = "Pressure: " + json.getJSONObject("main").getString("pressure") + " " + "hpa"
-//            wind = "Wind: " + json.getJSONObject("wind").getString("speed") + " " + "m/s"
-//            writeDataToDatabase(weatherDescription, humidity, pressure, wind, cityName)
-//            when (weatherDescription)
-//            {
-//                "Clear" -> image_weather_activity.setImageResource(R.drawable.sunny)
-//                "Clouds" -> image_weather_activity.setImageResource(R.drawable.cloudly)
-//                "Rain" -> image_weather_activity.setImageResource(R.drawable.rainy)
-//                else -> image_weather_activity.setImageResource(R.drawable.start)
-//            }
-//            if (isPressureChecked)
-//            {
-//                text_view_pressure.text = pressure
-//                text_view_pressure.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
-//            }
-//            if (isHumidityChecked)
-//            {
-//                text_view_humidity.text = humidity
-//                text_view_humidity.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
-//            }
-//            if (isWindChecked)
-//            {
-//                text_view_wind.text = wind
-//                text_view_wind.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
-//            }
-//
-//        } catch (e: Exception)
-//        {
-//            e.printStackTrace()
-//        }
-
-//    }
-
-    //    private fun writeDataToDatabase(weatherDescription: String?, humidity: String, pressure: String, wind: String, cityName: String)
-//    {
-//        var databaseHelper = WeatherDatabaseHelper(context = this)
-//        var cursor = databaseHelper.getCityWeather()
-//        cursor.moveToFirst()
-//        var weatherData = "$weatherDescription, $humidity, $pressure, $wind"
-//
-//        databaseHelper.cityWeather(cityName, weatherData)
-//
-//        cursor.close()
-//        databaseHelper.close()
-//
-//    }
-    companion object
+    @SuppressLint("SetTextI18n")
+    fun renderWeather(cityName: String, weather: String, humidity: String, pressure: String, wind: String, weatherDescription: String)
     {
-        fun setWeatherDataToView(cityName: String, humidity: String, pressure: String, wind: String, weatherDescription: String)
+
+        try
         {
 
+            text_view_city.text = cityName
+            text_view_weather.text = weather
+
+            when (weatherDescription)
+            {
+                "Clear" -> image_weather_activity.setImageResource(R.drawable.sunny)
+                "Clouds" -> image_weather_activity.setImageResource(R.drawable.cloudly)
+                "Rain" -> image_weather_activity.setImageResource(R.drawable.rainy)
+                else -> image_weather_activity.setImageResource(R.drawable.start)
+            }
+            if (isPressureChecked)
+            {
+                text_view_pressure.text = pressure
+                text_view_pressure.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
+            }
+            if (isHumidityChecked)
+            {
+                text_view_humidity.text = humidity
+                text_view_humidity.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
+            }
+            if (isWindChecked)
+            {
+                text_view_wind.text = wind
+                text_view_wind.setBackgroundColor(this.resources.getColor(R.color.colorBackground))
+            }
+
+        } catch (e: Exception)
+        {
+            e.printStackTrace()
         }
+
     }
 
-    class WeatherBroadcastReceiver : BroadcastReceiver()
+    inner class WeatherBroadcastReceiver : BroadcastReceiver()
     {
         lateinit var cityName: String
         lateinit var humidity: String
         lateinit var pressure: String
         lateinit var wind: String
+        lateinit var weather: String
         lateinit var weatherDescription: String
 
 
         override fun onReceive(p0: Context, p1: Intent)
         {
+
             if (p1.getStringExtra("cityName") == "")
             {
-                Toast.makeText(p0, "City not found", Toast.LENGTH_LONG).show()
+                Toast.makeText(p0, "City not found", Toast.LENGTH_SHORT).show()
             }
             cityName = p1.getStringExtra("cityName")
+            weather = p1.getStringExtra("weather")
             humidity = p1.getStringExtra("humidity")
             pressure = p1.getStringExtra("pressure")
             wind = p1.getStringExtra("wind")
             weatherDescription = p1.getStringExtra("weatherDescription")
-            Toast.makeText(p0, cityName, Toast.LENGTH_LONG).show()
 
-            setWeatherDataToView(cityName, humidity, pressure, wind, weatherDescription)
+            renderWeather(cityName, weather, humidity, pressure, wind, weatherDescription)
 
         }
 
 
     }
+
 
 }
 

@@ -52,6 +52,16 @@ class WeatherDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAM
         writableDatabase.update(TABLE, values, "CITY = ?", arrayOf(city))
     }
 
+    fun deleteCity(cityName: String)
+    {
+        writableDatabase.delete(DB_NAME,cityName,null)
+    }
+
+    fun deleteAllCities()
+    {
+        writableDatabase.delete(DB_NAME, null, null)
+    }
+
     fun getCityWeather(): Cursor
     {
         return readableDatabase.query(TABLE, arrayOf(ID, CITY),

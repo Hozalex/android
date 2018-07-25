@@ -3,8 +3,11 @@ package com.example.ahozyainov.services
 import android.app.IntentService
 import android.content.Intent
 import android.util.Log
+import com.example.ahozyainov.activities.R.id.text_view_weather
 import com.example.ahozyainov.activities.R.string.pressure
+import com.example.ahozyainov.activities.WeatherActivity
 import com.example.ahozyainov.models.WeatherDatabaseHelper
+import kotlinx.android.synthetic.main.activity_weather.*
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -20,12 +23,12 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
     private val RESPONSE_CODE = "cod"
     private val RESPONSE_CODE_OK = 200
     private val TAG: String = "DataLoadServiceLog"
-    private val ACTION_WEATHERDATALOAD: String = "com.example.ahozyainov.services.RESPONSE"
 
     var cityName: String = ""
     var humidity: String = ""
     var pressure: String = ""
     var wind: String = ""
+    var weather: String = ""
     var weatherDescription: String = ""
 
     override fun onCreate()
@@ -40,6 +43,7 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
         var jsonObject: JSONObject? = null
         try
         {
+
             val url = URL(String.format(POST_URL_API, city))
             val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
             connection.addRequestProperty(KEY, API_KEY)
@@ -74,10 +78,9 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
         }
 
 
-        val responseIntent = Intent()
-        responseIntent.action = ACTION_WEATHERDATALOAD
-        responseIntent.addCategory(Intent.CATEGORY_DEFAULT)
+        val responseIntent = Intent(WeatherActivity.BROADCAST_ACTION)
         responseIntent.putExtra("cityName", cityName)
+        responseIntent.putExtra("weather", weather)
         responseIntent.putExtra("humidity", humidity)
         responseIntent.putExtra("pressure", pressure)
         responseIntent.putExtra("wind", wind)
@@ -94,6 +97,8 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
             weatherDescription = json!!.getJSONArray("weather").getJSONObject(0).getString("main")
             cityName = json!!.getString("name").toUpperCase(Locale.US) + ", " +
                     json.getJSONObject("sys").getString("country")
+            weather = json.getJSONObject("main").getString("temp") + "\u2103" + " " +
+                    json.getJSONArray("weather").getJSONObject(0).getString("description")
             humidity = "Humidity: " + json.getJSONObject("main").getString("humidity") + " " + "\u0025"
             pressure = "Pressure: " + json.getJSONObject("main").getString("pressure") + " " + "hpa"
             wind = "Wind: " + json.getJSONObject("wind").getString("speed") + " " + "m/s"

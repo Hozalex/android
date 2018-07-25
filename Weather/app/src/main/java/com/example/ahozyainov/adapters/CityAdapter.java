@@ -56,6 +56,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
 
         public TextView tvTitle;
 
+
         public CityViewHolder(final View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
@@ -72,9 +73,13 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
 
             });
 
+
         }
 
+
     }
+
+
 
     public interface OnCityClickListener {
         void onCityClick(int cityPosition);

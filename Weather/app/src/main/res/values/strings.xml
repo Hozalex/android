@@ -21,7 +21,7 @@
     <string name="clear">Clear all Cities</string>
     <string name="delete_city">Delete City</string>
     <string name="info">Info</string>
-    <string name="attention_info">Attention: The Forecast in the app is not true!!!</string>
+    <string name="attention_info">The Forecast From OpenWeather</string>
     <string name="about">About</string>
     <string name="add_city_button">Add</string>
     <string name="input_city">Input City</string>
