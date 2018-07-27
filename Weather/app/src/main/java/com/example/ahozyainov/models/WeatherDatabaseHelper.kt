@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build.ID
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal.CITY
 import android.util.Log
+import com.example.ahozyainov.adapters.CityAdapter
 import java.text.DateFormat
 import java.util.*
 
@@ -54,12 +55,24 @@ class WeatherDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAM
 
     fun deleteCity(cityName: String)
     {
-        writableDatabase.delete(DB_NAME,cityName,null)
+        writableDatabase.delete(DB_NAME, cityName, null)
     }
 
     fun deleteAllCities()
     {
         writableDatabase.delete(DB_NAME, null, null)
+    }
+
+    fun getCityName(): String
+    {
+        lateinit var cityWeather: String
+        val cursor = readableDatabase.query(TABLE, arrayOf(CITY), null,
+                null, null, null, null)
+        cursor.moveToFirst()
+        cityWeather = cursor.getString(cursor.position)
+        cursor.close()
+        return cityWeather
+
     }
 
     fun getCityWeather(): Cursor

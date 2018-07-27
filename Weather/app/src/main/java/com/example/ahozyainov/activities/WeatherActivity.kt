@@ -105,20 +105,6 @@ class WeatherActivity : AppCompatActivity()
         val serviceIntent = Intent(this, WeatherDataLoadService::class.java)
         serviceIntent.putExtra("city", city)
         startService(serviceIntent)
-//        Thread(Runnable {
-//            val json: JSONObject? = WeatherDataLoader.getJSONData(city)
-//            if (json == null)
-//            {
-//                handler.post {
-//                    Toast.makeText(applicationContext, getString(R.string.city_not_found), Toast.LENGTH_LONG).show()
-//                }
-//            } else
-//            {
-//                handler.post {
-//                    renderWeather(json)
-//                }
-//            }
-//        }).start()
 
     }
 

@@ -1,12 +1,14 @@
 package com.example.ahozyainov.services
 
 import android.app.IntentService
+import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.util.Log
 import com.example.ahozyainov.activities.R.id.text_view_weather
 import com.example.ahozyainov.activities.R.string.pressure
 import com.example.ahozyainov.activities.WeatherActivity
 import com.example.ahozyainov.models.WeatherDatabaseHelper
+import com.example.ahozyainov.widget.WidgetWeather
 import kotlinx.android.synthetic.main.activity_weather.*
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -40,6 +42,7 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
     override fun onHandleIntent(p0: Intent?)
     {
         val city: String = p0!!.getStringExtra("city")
+        Log.d(TAG, "OnHandlerIntent$city")
         var jsonObject: JSONObject? = null
         try
         {
@@ -77,7 +80,13 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
 
         }
 
+        sendDataToWeatherActivity()
+        sendDataToWidget()
 
+    }
+
+    private fun sendDataToWeatherActivity()
+    {
         val responseIntent = Intent(WeatherActivity.BROADCAST_ACTION)
         responseIntent.putExtra("cityName", cityName)
         responseIntent.putExtra("weather", weather)
@@ -85,9 +94,19 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
         responseIntent.putExtra("pressure", pressure)
         responseIntent.putExtra("wind", wind)
         responseIntent.putExtra("weatherDescription", weatherDescription)
+        Log.d(TAG, "sendDataToWeatherActivity $cityName, $weather, $weatherDescription")
         sendBroadcast(responseIntent)
+    }
 
-
+    private fun sendDataToWidget()
+    {
+        val widgetIntent = Intent(this, WidgetWeather::class.java)
+        widgetIntent.action = WidgetWeather.UPDATE_WIDGET_ACTION
+        widgetIntent.putExtra("cityName", cityName)
+        widgetIntent.putExtra("weather", weather)
+        widgetIntent.putExtra("weatherDescription", weatherDescription)
+        Log.d(TAG, "sendDataToWidget $cityName, $weather, $weatherDescription")
+        sendBroadcast(widgetIntent)
     }
 
     private fun getDataFromJSON(json: JSONObject?)
@@ -95,7 +114,7 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
         try
         {
             weatherDescription = json!!.getJSONArray("weather").getJSONObject(0).getString("main")
-            cityName = json!!.getString("name").toUpperCase(Locale.US) + ", " +
+            cityName = json.getString("name").toUpperCase(Locale.US) + ", " +
                     json.getJSONObject("sys").getString("country")
             weather = json.getJSONObject("main").getString("temp") + "\u2103" + " " +
                     json.getJSONArray("weather").getJSONObject(0).getString("description")

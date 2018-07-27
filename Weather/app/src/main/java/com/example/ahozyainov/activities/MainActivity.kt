@@ -265,12 +265,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    private fun deleteCity(itemId:Int)
+    private fun deleteCity(itemId: Int)
     {
-        val databaseHelper = WeatherDatabaseHelper(context = this)
-        databaseHelper.deleteAllCities()
-        deleteCityList(internalPath + cityListFileName)
-        addAdapter(savedInstanceState = Bundle())
+        //TODO
+//        val databaseHelper = WeatherDatabaseHelper(context = this)
+//        databaseHelper.deleteCity(cityName)
+//        citiesArrayList.removeAt(itemId)
+//        addAdapter(savedInstanceState = Bundle())
     }
 
     private fun clearCities()
