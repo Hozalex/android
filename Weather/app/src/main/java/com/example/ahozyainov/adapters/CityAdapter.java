@@ -80,7 +80,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
     }
 
 
-
     public interface OnCityClickListener {
         void onCityClick(int cityPosition);
     }

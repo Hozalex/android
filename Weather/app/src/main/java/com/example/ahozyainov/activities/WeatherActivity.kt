@@ -60,11 +60,6 @@ class WeatherActivity : AppCompatActivity()
         }
     }
 
-    override fun onStop()
-    {
-        unregisterReceiver(broadcastReceiver)
-        super.onStop()
-    }
 
     private fun shareWeather()
     {
@@ -160,11 +155,6 @@ class WeatherActivity : AppCompatActivity()
 
         override fun onReceive(p0: Context, p1: Intent)
         {
-
-            if (p1.getStringExtra("cityName") == "")
-            {
-                Toast.makeText(p0, "City not found", Toast.LENGTH_SHORT).show()
-            }
             cityName = p1.getStringExtra("cityName")
             weather = p1.getStringExtra("weather")
             humidity = p1.getStringExtra("humidity")

@@ -2,8 +2,11 @@ package com.example.ahozyainov.services
 
 import android.app.IntentService
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.util.Log
+import android.widget.RemoteViews
+import com.example.ahozyainov.activities.R
 import com.example.ahozyainov.activities.R.id.text_view_weather
 import com.example.ahozyainov.activities.R.string.pressure
 import com.example.ahozyainov.activities.WeatherActivity
@@ -88,6 +91,10 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
     private fun sendDataToWeatherActivity()
     {
         val responseIntent = Intent(WeatherActivity.BROADCAST_ACTION)
+        if (cityName.isEmpty())
+        {
+            cityName = "City Not Found"
+        }
         responseIntent.putExtra("cityName", cityName)
         responseIntent.putExtra("weather", weather)
         responseIntent.putExtra("humidity", humidity)
@@ -100,13 +107,23 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
 
     private fun sendDataToWidget()
     {
-        val widgetIntent = Intent(this, WidgetWeather::class.java)
-        widgetIntent.action = WidgetWeather.UPDATE_WIDGET_ACTION
-        widgetIntent.putExtra("cityName", cityName)
-        widgetIntent.putExtra("weather", weather)
-        widgetIntent.putExtra("weatherDescription", weatherDescription)
-        Log.d(TAG, "sendDataToWidget $cityName, $weather, $weatherDescription")
-        sendBroadcast(widgetIntent)
+        val remoteView = RemoteViews(packageName, R.layout.widget_layout)
+        if (cityName.isEmpty())
+        {
+            cityName = "City Not Found"
+        }
+        remoteView.setTextViewText(R.id.tvCityWidget, cityName + "\n" + weather)
+        when (weatherDescription)
+        {
+            "Clear" -> remoteView.setImageViewResource(R.id.ivCityWidget, R.drawable.sunnywidget)
+            "Clouds" -> remoteView.setImageViewResource(R.id.ivCityWidget, R.drawable.cloudlywidget)
+            "Rain" -> remoteView.setImageViewResource(R.id.ivCityWidget, R.drawable.rainywidget)
+            else -> remoteView.setImageViewResource(R.id.ivCityWidget, R.drawable.start)
+        }
+        val widget = ComponentName(this, WidgetWeather::class.java)
+        val manager = AppWidgetManager.getInstance(this)
+        manager.updateAppWidget(widget, remoteView)
+
     }
 
     private fun getDataFromJSON(json: JSONObject?)
