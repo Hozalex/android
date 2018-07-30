@@ -29,12 +29,12 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
     private val RESPONSE_CODE_OK = 200
     private val TAG: String = "DataLoadServiceLog"
 
-    var cityName: String = ""
-    var humidity: String = ""
-    var pressure: String = ""
-    var wind: String = ""
-    var weather: String = ""
-    var weatherDescription: String = ""
+    private var cityName: String = ""
+    private var humidity: String = ""
+    private var pressure: String = ""
+    private var wind: String = ""
+    private var weather: String = ""
+    private var weatherDescription: String = ""
 
     override fun onCreate()
     {
@@ -103,6 +103,7 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
         responseIntent.putExtra("weatherDescription", weatherDescription)
         Log.d(TAG, "sendDataToWeatherActivity $cityName, $weather, $weatherDescription")
         sendBroadcast(responseIntent)
+        stopSelf()
     }
 
     private fun sendDataToWidget()
@@ -123,7 +124,7 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
         val widget = ComponentName(this, WidgetWeather::class.java)
         val manager = AppWidgetManager.getInstance(this)
         manager.updateAppWidget(widget, remoteView)
-
+        stopSelf()
     }
 
     private fun getDataFromJSON(json: JSONObject?)

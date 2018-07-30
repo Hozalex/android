@@ -5,6 +5,8 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.RemoteViews
+import com.example.ahozyainov.activities.R
 import com.example.ahozyainov.models.WeatherDatabaseHelper
 import com.example.ahozyainov.services.WeatherDataLoadService
 
@@ -20,14 +22,13 @@ class WidgetWeather : AppWidgetProvider()
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         for (id in appWidgetIds)
         {
-            updateWidget(context, appWidgetManager, id)
+            updateWidget(context)
             Log.d(TAG, "Update $id")
         }
-        
 
     }
 
-    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int)
+    private fun updateWidget(context: Context)
     {
         dbHelper = WeatherDatabaseHelper(context)
         val serviceIntent = Intent(context, WeatherDataLoadService::class.java)
