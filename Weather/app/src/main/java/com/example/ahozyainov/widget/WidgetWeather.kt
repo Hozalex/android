@@ -5,8 +5,6 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.RemoteViews
-import com.example.ahozyainov.activities.R
 import com.example.ahozyainov.models.WeatherDatabaseHelper
 import com.example.ahozyainov.services.WeatherDataLoadService
 

@@ -88,6 +88,7 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
 
     }
 
+
     private fun sendDataToWeatherActivity()
     {
         val responseIntent = Intent(WeatherActivity.BROADCAST_ACTION)

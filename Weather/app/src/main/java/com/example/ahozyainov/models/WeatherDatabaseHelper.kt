@@ -68,9 +68,12 @@ class WeatherDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAM
         lateinit var cityWeather: String
         val cursor = readableDatabase.query(TABLE, arrayOf(CITY), null,
                 null, null, null, null)
-        cursor.moveToFirst()
-        cityWeather = cursor.getString(cursor.position)
-        cursor.close()
+        if (cursor.moveToFirst())
+        {
+            cursor.moveToFirst()
+            cityWeather = cursor.getString(cursor.position)
+            cursor.close()
+        } else cityWeather = ""
         return cityWeather
 
     }

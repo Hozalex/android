@@ -60,6 +60,12 @@ class WeatherActivity : AppCompatActivity()
         }
     }
 
+    override fun onStop()
+    {
+        unregisterReceiver(broadcastReceiver)
+        super.onStop()
+    }
+
 
     private fun shareWeather()
     {
@@ -145,12 +151,12 @@ class WeatherActivity : AppCompatActivity()
 
     inner class WeatherBroadcastReceiver : BroadcastReceiver()
     {
-        lateinit var cityName: String
-        lateinit var humidity: String
-        lateinit var pressure: String
-        lateinit var wind: String
-        lateinit var weather: String
-        lateinit var weatherDescription: String
+        private lateinit var cityName: String
+        private lateinit var humidity: String
+        private lateinit var pressure: String
+        private lateinit var wind: String
+        private lateinit var weather: String
+        private lateinit var weatherDescription: String
 
 
         override fun onReceive(p0: Context, p1: Intent)
