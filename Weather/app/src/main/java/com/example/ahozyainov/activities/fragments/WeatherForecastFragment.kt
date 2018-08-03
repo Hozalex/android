@@ -15,15 +15,16 @@ import com.example.ahozyainov.models.Cities
 import kotlinx.android.synthetic.main.activity_weather.*
 
 
-class WeatherForecastFragment : Fragment() {
-
-    private var cityId: Int = 0
+class WeatherForecastFragment : Fragment()
+{
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View?
+    {
         var fragmentManager: FragmentManager = childFragmentManager
         var forecastDetailFragment = fragmentManager.findFragmentByTag("FORECAST_DETAIL_FRAGMENT_TAG")
-        if (forecastDetailFragment == null) {
+        if (forecastDetailFragment == null)
+        {
             var fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
             forecastDetailFragment = ForecastDetailFragment()
             fragmentTransaction.replace(R.id.forecast_detail_container, forecastDetailFragment, "FORECAST_DETAIL_FRAGMENT_TAG")
@@ -32,9 +33,9 @@ class WeatherForecastFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_weather_forecast, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
-
 
         if (arguments == null) return
         var cities = Cities.getAllCities(context)
@@ -53,7 +54,8 @@ class WeatherForecastFragment : Fragment() {
         }
     }
 
-    companion object {
+    companion object
+    {
         @JvmStatic
         fun newInstance(cityId: Int) =
                 WeatherForecastFragment().apply {

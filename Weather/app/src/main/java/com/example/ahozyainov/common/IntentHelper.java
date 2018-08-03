@@ -9,6 +9,8 @@ public class IntentHelper {
     public static final String EXTRA_CITY_ID = "cityId";
     public static final String EXTRA_SHARED_WEATHER = "sharedText";
     public static final String EXTRA_ARRAY_CITIES = "citiesArray";
+    public static final String EXTRA_COORDINATES = "coordinates";
+    public static final String BROADCAST_ACTION = "com.example.ahozyainov.services.RESPONSE";
 
 }
 

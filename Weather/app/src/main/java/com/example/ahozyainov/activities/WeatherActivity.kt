@@ -2,23 +2,17 @@ package com.example.ahozyainov.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.*
-import android.os.*
-import android.support.annotation.UiThread
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.TextView
-import android.widget.Toast
-import com.example.ahozyainov.activities.R.id.*
-import com.example.ahozyainov.activities.R.string.last_share_weather
-import com.example.ahozyainov.activities.R.string.pressure
 import com.example.ahozyainov.common.IntentHelper
-import com.example.ahozyainov.models.WeatherDataLoader
+import com.example.ahozyainov.common.IntentHelper.BROADCAST_ACTION
 import com.example.ahozyainov.models.WeatherDatabaseHelper
 import com.example.ahozyainov.services.WeatherDataLoadService
 import kotlinx.android.synthetic.main.activity_weather.*
-import kotlinx.android.synthetic.main.activity_weather.view.*
-import org.json.JSONObject
-import java.util.*
 
 class WeatherActivity : AppCompatActivity()
 {
@@ -29,14 +23,6 @@ class WeatherActivity : AppCompatActivity()
     private var isHumidityChecked: Boolean = false
     private var isWindChecked: Boolean = false
     private lateinit var broadcastReceiver: BroadcastReceiver
-
-
-    companion object
-    {
-        const val BROADCAST_ACTION = "com.example.ahozyainov.services.RESPONSE"
-
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -59,13 +45,6 @@ class WeatherActivity : AppCompatActivity()
 
         }
     }
-
-    override fun onStop()
-    {
-        unregisterReceiver(broadcastReceiver)
-        super.onStop()
-    }
-
 
     private fun shareWeather()
     {
@@ -104,7 +83,8 @@ class WeatherActivity : AppCompatActivity()
     {
 
         val serviceIntent = Intent(this, WeatherDataLoadService::class.java)
-        serviceIntent.putExtra("city", city)
+        serviceIntent.putExtra(IntentHelper.EXTRA_CITY_NAME, city)
+        serviceIntent.putExtra(IntentHelper.EXTRA_COORDINATES, arrayOf(""))
         startService(serviceIntent)
 
     }
@@ -115,9 +95,9 @@ class WeatherActivity : AppCompatActivity()
 
         try
         {
-
             text_view_city.text = cityName
             text_view_weather.text = weather
+            writeDataToDatabase(weatherDescription, humidity, pressure, wind, cityName)
 
             when (weatherDescription)
             {
@@ -146,6 +126,20 @@ class WeatherActivity : AppCompatActivity()
         {
             e.printStackTrace()
         }
+
+    }
+
+    private fun writeDataToDatabase(weatherDescription: String?, humidity: String, pressure: String, wind: String, cityName: String)
+    {
+        val databaseHelper = WeatherDatabaseHelper(context = this)
+        val cursor = databaseHelper.getCityWeather()
+        cursor.moveToFirst()
+        val weatherData = "$weatherDescription, $humidity, $pressure, $wind"
+
+        databaseHelper.cityWeather(cityName, weatherData)
+
+        cursor.close()
+        databaseHelper.close()
 
     }
 

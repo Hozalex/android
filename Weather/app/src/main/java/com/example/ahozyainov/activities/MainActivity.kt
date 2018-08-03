@@ -1,7 +1,7 @@
 package com.example.ahozyainov.activities
 
+import android.Manifest
 import android.app.Activity
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.NavigationView
@@ -23,23 +24,29 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
-import android.widget.*
-import com.example.ahozyainov.activities.R.id.nav_view
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.Toast
 import com.example.ahozyainov.activities.fragments.WeatherForecastFragment
 import com.example.ahozyainov.adapters.CityAdapter
 import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.Cities
+import com.example.ahozyainov.models.JSONData
 import com.example.ahozyainov.models.WeatherDatabaseHelper
+import com.example.ahozyainov.utils.MyLocation
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.*
 import java.net.URL
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
-
+    private val INITIAL_PERM = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION)
     private var sharedText = ""
     private val mySettings = "mySettings"
     private val sendRequestCode = 1
@@ -63,6 +70,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            requestPermissions(INITIAL_PERM, 1337)
+        }
         twoPane = findViewById<View>(R.id.flRightContainer) != null
         settings = getSharedPreferences(mySettings, Context.MODE_PRIVATE)
         citiesArrayList = ArrayList(10)
@@ -70,6 +81,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         internalPath = filesDir.toString()
         externalPath = Environment.getExternalStorageDirectory().absolutePath.toString()
         avatarData = AvatarData(avatarImageView, internalPath, externalPath, avatarFileName)
+
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
         registerForContextMenu(rvCities)
@@ -80,19 +92,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         {
             setSavedInstanceCity(savedInstanceState)
         }
-        if (settings != null)
-        {
-            getSettings()
-        }
 
+        getSettings()
         setSupportActionBar(toolbar)
-
         initActionBar()
-
         nav_view.setNavigationItemSelectedListener(this)
         addAdapter(savedInstanceState)
         initPopUpMenu(popButton)
 
+        if (citiesArrayList.isEmpty())
+        {
+            MyLocation.getMyLocation(this)
+            Log.d("jsonData", "from Main $JSONData.cityName")
+            citiesArrayList.add(Cities(JSONData.cityName))
+            addAdapter(savedInstanceState = Bundle())
+        }
 
     }
 
@@ -114,12 +128,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun initActionBar()
     {
-
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.open, R.string.close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
     }
 
 
@@ -478,7 +490,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         {
             saveAvatarInternal()
             saveAvatarExternal()
-
         }
 
         private fun saveAvatarExternal()
@@ -497,8 +508,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             try
             {
-
-
                 fileOutputStream = FileOutputStream(avatarExternalFile, false)
                 objectOutputStream = ObjectOutputStream(fileOutputStream)
                 objectOutputStream.writeObject(getByteArrayFromDrawable(imageView.drawable))
