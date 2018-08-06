@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.RemoteViews
 import com.example.ahozyainov.activities.R
 import com.example.ahozyainov.common.IntentHelper
-import com.example.ahozyainov.models.WeatherDatabaseHelper
 import com.example.ahozyainov.models.JSONData
 import com.example.ahozyainov.widget.WidgetWeather
 import org.json.JSONObject
@@ -16,7 +15,6 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 
 class WeatherDataLoadService : IntentService("WeatherDataLoadService")
 {
@@ -43,12 +41,6 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
         if (intent!!.getStringExtra(IntentHelper.EXTRA_CITY_NAME) != "")
         {
             url = URL(String.format(POST_URL_API_CITYNAME, intent.getStringExtra(IntentHelper.EXTRA_CITY_NAME)))
-            Log.d(TAG, url.toString())
-        }
-        if (intent.getStringArrayExtra(IntentHelper.EXTRA_COORDINATES)[0] != "")
-        {
-            url = URL(String.format(POST_URL_API_COORDINATES, intent.getStringArrayExtra(IntentHelper.EXTRA_COORDINATES)[0]
-                    , intent.getStringArrayExtra(IntentHelper.EXTRA_COORDINATES)[1]))
             Log.d(TAG, url.toString())
         }
 
@@ -92,12 +84,12 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
     private fun sendDataToWeatherActivity()
     {
         val responseIntent = Intent(IntentHelper.BROADCAST_ACTION)
-        if (JSONData.cityName == "")
+        if (jsonData.cityName == "")
         {
             responseIntent.putExtra("cityName", "City not Found")
         } else
         {
-            responseIntent.putExtra("cityName", JSONData.cityName)
+            responseIntent.putExtra("cityName", jsonData.cityName)
         }
         responseIntent.putExtra("weather", jsonData.weather)
         responseIntent.putExtra("humidity", jsonData.humidity)
@@ -112,12 +104,12 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
     private fun sendDataToWidget()
     {
         val remoteView = RemoteViews(packageName, R.layout.widget_layout)
-        if (JSONData.cityName == "")
+        if (jsonData.cityName == "")
         {
             remoteView.setTextViewText(R.id.tvCityWidget, "City not found\n$jsonData.weather")
         } else
         {
-            remoteView.setTextViewText(R.id.tvCityWidget, JSONData.cityName + "\n" + jsonData.weather)
+            remoteView.setTextViewText(R.id.tvCityWidget, jsonData.cityName + "\n" + jsonData.weather)
         }
 
         when (jsonData.weatherDescription)

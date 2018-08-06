@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.example.ahozyainov.common.IntentHelper
 import com.example.ahozyainov.models.WeatherDatabaseHelper
 import com.example.ahozyainov.services.WeatherDataLoadService
 
@@ -30,7 +31,8 @@ class WidgetWeather : AppWidgetProvider()
     {
         dbHelper = WeatherDatabaseHelper(context)
         val serviceIntent = Intent(context, WeatherDataLoadService::class.java)
-        serviceIntent.putExtra("city", dbHelper.getCityName())
+        serviceIntent.putExtra(IntentHelper.EXTRA_CITY_NAME, dbHelper.getCityName())
+        Log.d(TAG, dbHelper.getCityName())
         context.startService(serviceIntent)
     }
 

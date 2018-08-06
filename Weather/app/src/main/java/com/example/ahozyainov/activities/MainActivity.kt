@@ -1,6 +1,7 @@
 package com.example.ahozyainov.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -38,10 +42,11 @@ import com.example.ahozyainov.utils.MyLocation
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import org.json.JSONObject
 import java.io.*
+import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
@@ -52,7 +57,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val sendRequestCode = 1
     private lateinit var settings: SharedPreferences
     private var twoPane: Boolean = false
-    private lateinit var citiesArrayList: ArrayList<Cities>
+    lateinit var citiesArrayList: ArrayList<Cities>
     private var cityListFileName = "cityList"
     private var avatarFileName = "default_avatar"
     private lateinit var internalPath: String
@@ -64,6 +69,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var isWindChecked: Boolean = false
     private lateinit var avatarImageView: ImageView
     private lateinit var avatarData: AvatarData
+    private val TAG = "mainActivity"
+    private lateinit var getCityName: GetCityName
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -81,13 +88,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         internalPath = filesDir.toString()
         externalPath = Environment.getExternalStorageDirectory().absolutePath.toString()
         avatarData = AvatarData(avatarImageView, internalPath, externalPath, avatarFileName)
-
+        getCityName = GetCityName(this)
         rvCities.setHasFixedSize(true)
         rvCities.layoutManager = LinearLayoutManager(this)
         registerForContextMenu(rvCities)
         readCityList(internalPath + cityListFileName)
         readAvatarInternal(internalPath + avatarFileName)
-
         if (savedInstanceState != null)
         {
             setSavedInstanceCity(savedInstanceState)
@@ -102,12 +108,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (citiesArrayList.isEmpty())
         {
-            MyLocation.getMyLocation(this)
-            Log.d("jsonData", "from Main $JSONData.cityName")
-            citiesArrayList.add(Cities(JSONData.cityName))
-            addAdapter(savedInstanceState = Bundle())
+            getNewCityName()
         }
 
+    }
+
+    private fun getNewCityName()
+    {
+        getCityName.execute()
+        Log.d(TAG, "new city ${getCityName.get().cityName}")
+        citiesArrayList.add(0, Cities(getCityName.get().cityName))
+        addAdapter(savedInstanceState = Bundle())
     }
 
     private fun getSettings()
@@ -354,7 +365,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     {
 
         saveCityList(internalPath + cityListFileName)
-
         settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_PRESSURE, isPressureChecked).apply()
         settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_HUMIDITY, isHumidityChecked).apply()
         settings.edit().putBoolean(IntentHelper.EXTRA_CHECKBOX_WIND, isWindChecked).apply()
@@ -566,7 +576,67 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         }
 
+    }
 
+    inner class GetCityName(context: Context) : AsyncTask<Void, Void, JSONData>()
+    {
+
+        val API_KEY = "b24c3e1ddeea0709848ec2c367c01d24"
+        val KEY = "x-api-key"
+        val RESPONSE_CODE = "cod"
+        val RESPONSE_CODE_OK = 200
+        var jsonData = JSONData(context)
+        val TAG = "getCityNameTAG"
+        val location = MyLocation.getMyLocation(context)
+
+        override fun doInBackground(vararg p0: Void?): JSONData
+        {
+            val latitude = location.latitude
+            val longitude = location.longitude
+            Log.d(TAG, "coordinates $latitude $longitude")
+            var jsonObject: JSONObject?
+            try
+            {
+                val url = URL(String.format("http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=metric",
+                        latitude, longitude))
+                Log.d(TAG, "url string " + url.toString())
+                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+                connection.addRequestProperty(KEY, API_KEY)
+
+                val reader = BufferedReader(InputStreamReader(connection.inputStream))
+                val rawData = StringBuilder(1024)
+                var temp: String
+
+                while (true)
+                {
+                    temp = reader.readLine() ?: break
+                    rawData.append(temp).append("\n")
+                }
+
+                reader.close()
+                connection.disconnect()
+                jsonObject = JSONObject(rawData.toString())
+
+                if (jsonObject.getInt(RESPONSE_CODE) != RESPONSE_CODE_OK)
+                {
+                    Log.d(TAG, "Response code not OK")
+                    jsonObject = null
+                }
+
+                jsonData.getDataFromJSON(jsonObject)
+
+            } catch (e: Exception)
+            {
+                e.printStackTrace()
+                Log.d(TAG, e.message)
+            }
+            return jsonData
+        }
+
+        override fun onPostExecute(jsonData: JSONData)
+        {
+            Log.d(TAG, "post exec ${jsonData.cityName}")
+        }
     }
 
 

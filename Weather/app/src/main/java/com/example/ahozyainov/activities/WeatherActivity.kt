@@ -46,6 +46,12 @@ class WeatherActivity : AppCompatActivity()
         }
     }
 
+    override fun onStop()
+    {
+        unregisterReceiver(broadcastReceiver)
+        super.onStop()
+    }
+
     private fun shareWeather()
     {
         val shareIntent = Intent(Intent.ACTION_SEND)

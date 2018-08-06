@@ -7,12 +7,7 @@ import java.util.*
 
 class JSONData(val context: Context)
 {
-    companion object
-    {
         var cityName: String = ""
-        var isCityName = false
-    }
-
     var humidity: String = ""
     var pressure: String = ""
     var wind: String = ""
@@ -27,13 +22,12 @@ class JSONData(val context: Context)
             weatherDescription = json!!.getJSONArray("weather").getJSONObject(0).getString("main")
             cityName = json.getString("name").toUpperCase(Locale.US) + ", " +
                     json.getJSONObject("sys").getString("country")
-            isCityName = true
             weather = json.getJSONObject("main").getString("temp") + "\u2103" + " " +
                     json.getJSONArray("weather").getJSONObject(0).getString("description")
             humidity = "Humidity: " + json.getJSONObject("main").getString("humidity") + " " + "\u0025"
             pressure = "Pressure: " + json.getJSONObject("main").getString("pressure") + " " + "hpa"
             wind = "Wind: " + json.getJSONObject("wind").getString("speed") + " " + "m/s"
-            Log.d(TAG, cityName)
+            Log.d(TAG, "from JSONDATA $cityName")
         } catch (e: Exception)
         {
             e.printStackTrace()
