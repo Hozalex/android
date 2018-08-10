@@ -74,7 +74,7 @@ class WeatherDataLoadService : IntentService("WeatherDataLoadService")
         } catch (e: Exception)
         {
             e.printStackTrace()
-            Log.d(TAG, e.message)
+            Log.d(TAG, e.toString())
         }
 
         sendDataToWeatherActivity()

@@ -7,7 +7,7 @@ import java.util.*
 
 class JSONData(val context: Context)
 {
-        var cityName: String = ""
+    var cityName: String = ""
     var humidity: String = ""
     var pressure: String = ""
     var wind: String = ""

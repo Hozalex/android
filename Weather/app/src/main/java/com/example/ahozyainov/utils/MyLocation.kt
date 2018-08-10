@@ -16,7 +16,7 @@ class MyLocation
         private lateinit var location: Location
         private const val LOCATION_PROVIDER = LocationManager.PASSIVE_PROVIDER
         private lateinit var geocoder: Geocoder
-        val TAG = "myLocation"
+        private const val TAG = "myLocation"
 
         @SuppressLint("MissingPermission")
         fun getMyLocation(context: Context): Location
