@@ -19,6 +19,7 @@
         android:layout_gravity="center"
         android:layout_weight="2"
         android:hint="@string/app_name"
+        android:textColor="@color/colorPrimaryText"
         android:padding="8dp"
         android:textSize="18sp"
         android:shadowColor="@color/colorAccent"
